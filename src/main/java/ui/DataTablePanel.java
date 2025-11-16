@@ -9,13 +9,13 @@ import java.awt.*;
 import java.sql.SQLException;
 
 /**
- * Data Table Panel for Student Data Analysis System.
+ * Data Table Panel for Bank Data Analysis System.
  * Displays query results in tabular format with various analysis options.
  * 
  * This panel provides interactive data tables showing different
  * statistical analyses and allows users to switch between views.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class DataTablePanel extends JPanel {

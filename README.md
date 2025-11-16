@@ -1,6 +1,6 @@
-# Student Data Analysis System
+# Bank Data Analysis System
 
-A comprehensive Java Swing + JDBC application for analyzing student admission and performance data using MySQL/MariaDB database.
+A comprehensive Java Swing + JDBC application for analyzing bank account and transaction data using MySQL/MariaDB database.
 
 ## 📋 Table of Contents
 
@@ -22,10 +22,10 @@ A comprehensive Java Swing + JDBC application for analyzing student admission an
 
 This project is a complete data analysis system developed as part of the Object Oriented Programming semester project. It demonstrates working with real-world datasets including:
 
-- Student personal information
-- Academic program details
-- Admission records and trends
-- Student performance and grades
+- Bank account information
+- Transaction records and trends
+- Loan portfolio details
+- Card distribution and usage
 
 The system provides statistical analysis, data visualization, and comprehensive reporting capabilities through an intuitive graphical user interface.
 
@@ -38,13 +38,13 @@ The system provides statistical analysis, data visualization, and comprehensive 
 - ✅ CRUD operations with prepared statements
 
 ### Statistical Analysis
-- 📊 Admissions by program and department
-- 📈 Admission trends over years
-- 🎓 Student performance analysis with GPA calculation
-- 👥 Gender distribution analysis
-- 🌍 Regional distribution of students
-- 💰 Revenue analysis by program
-- 📉 Score range analysis
+- 📊 Account balances by type
+- 📈 Transaction trends over time
+- 🎓 Loan portfolio analysis
+- 👥 Account status distribution
+- 🌍 Branch-wise distribution
+- 💰 Revenue analysis from loans
+- 📉 Balance range analysis
 
 ### Data Visualization
 - 📊 Bar charts for comparative analysis
@@ -107,7 +107,7 @@ Or download and extract the ZIP file.
 Edit `src/main/resources/config.properties`:
 
 ```properties
-db.url=jdbc:mysql://localhost:3306/student_data_analysis?useSSL=false&serverTimezone=UTC
+db.url=jdbc:mysql://localhost:3306/bank_data_analysis?useSSL=false&serverTimezone=UTC
 db.user=root
 db.password=
 ```
@@ -157,15 +157,15 @@ mysql -u root -p < sql/schema.sql
 
 **Using Command Line:**
 ```bash
-mysql -u root -p student_data_analysis < sql/import.sql
+mysql -u root -p bank_data_analysis < sql/import.sql
 ```
 
 ### Step 4: Verify Installation
 
 ```sql
-USE student_data_analysis;
+USE bank_data_analysis;
 SHOW TABLES;
-SELECT COUNT(*) FROM students;
+SELECT COUNT(*) FROM accounts;
 ```
 
 You should see 4 tables with sample data.
@@ -231,10 +231,10 @@ dorice/
 │   │   └── resources/
 │   │       ├── config.properties          # Configuration file
 │   │       └── data/                      # CSV data files
-│   │           ├── students.csv
-│   │           ├── programs.csv
-│   │           ├── admissions.csv
-│   │           └── grades.csv
+│   │           ├── students.csv -> accounts.csv
+│   │           ├── programs.csv -> loans.csv
+│   │           ├── admissions.csv -> transactions.csv
+│   │           └── grades.csv -> cards.csv
 │   └── test/
 │       └── java/
 │           ├── db/
@@ -262,9 +262,9 @@ When you launch the application:
 ### 2. Dashboard Tab
 
 View summary statistics including:
-- Total students, programs, and admissions
-- Active students count
-- Average entrance scores
+- Total accounts, transactions, and balance
+- Active accounts count
+- Active loans and cards
 - Generated insights and recommendations
 
 Click **Refresh** to update the data.
@@ -277,17 +277,17 @@ Click **Refresh** to update the data.
 - All tables support sorting by clicking column headers
 
 Available analyses:
-- Admissions by Program
-- Admissions by Year
-- Status Distribution
-- Department Analysis
-- Gender Distribution
-- Top Students
-- Program Trends
-- Student Performance
-- Course Statistics
-- Regional Distribution
-- Score Range Analysis
+- Account Balances by Type
+- Transactions by Type
+- Branch Distribution
+- Loan Portfolio Analysis
+- Account Status Distribution
+- Top Accounts (10)
+- Transaction Trends
+- Card Distribution
+- Account Activity
+- Loan Repayment Analysis
+- Balance Range Analysis
 - Revenue Analysis
 
 ### 4. Charts & Graphs Tab
@@ -361,7 +361,7 @@ mysql -u root -p < sql/schema.sql
 ### Issue: No data displayed
 
 **Solution:**
-1. Import sample data: `mysql -u root -p student_data_analysis < sql/import.sql`
+1. Import sample data: `mysql -u root -p bank_data_analysis < sql/import.sql`
 2. Or use File → Import CSV Files
 
 ### Issue: Charts not displaying
@@ -415,7 +415,7 @@ Additional documentation available in `docs/` directory:
 ✅ Data visualization  
 ✅ Swing GUI implementation  
 ✅ Comprehensive documentation  
-✅ Unit testing  
+✅ Unit testing
 
 ## 🤝 Contributing
 

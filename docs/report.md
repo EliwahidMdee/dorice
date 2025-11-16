@@ -1,8 +1,8 @@
-# Student Data Analysis System - Project Report
+# Bank Data Analysis System - Project Report
 
 ## Executive Summary
 
-This report documents the development and implementation of a comprehensive Java-based Data Analysis System designed to analyze student admission and performance data. The system demonstrates the complete workflow of working with real-world datasets, from database design to data visualization, fulfilling all requirements of the Object Oriented Programming semester project.
+This report documents the development and implementation of a comprehensive Java-based Data Analysis System designed to analyze bank account and transaction data. The system demonstrates the complete workflow of working with real-world datasets, from database design to data visualization, fulfilling all requirements of the Object Oriented Programming semester project.
 
 ---
 
@@ -10,12 +10,12 @@ This report documents the development and implementation of a comprehensive Java
 
 ### 1.1 Project Overview
 
-The Student Data Analysis System is a desktop application built using Java Swing and JDBC that provides comprehensive data analysis capabilities for educational institutions. The system processes and analyzes data related to:
+The Bank Data Analysis System is a desktop application built using Java Swing and JDBC that provides comprehensive data analysis capabilities for financial institutions. The system processes and analyzes data related to:
 
-- Student demographic information
-- Academic programs and departments
-- Admission records and trends
-- Student grades and performance
+- Customer account information
+- Transaction records and patterns
+- Loan portfolio details
+- Card distribution and usage
 
 ### 1.2 Project Objectives
 
@@ -47,49 +47,48 @@ The Student Data Analysis System is a desktop application built using Java Swing
 
 The system works with four primary CSV files containing related data:
 
-#### **students.csv**
-Contains student personal information:
-- Student ID (Primary Key)
-- First Name, Last Name
-- Email (Unique), Phone
-- Gender, Date of Birth
-- Residential Address/Region
-- Total Records: 20 students
+#### **accounts.csv**
+Contains bank account information:
+- Account ID (Primary Key)
+- Customer Name, Email, Phone
+- Account Type, Balance
+- Date Opened, Branch
+- Status
+- Total Records: 20 accounts
 
-#### **programs.csv**
-Contains academic program information:
-- Program ID (Primary Key)
-- Program Name
-- Department
-- Duration (Years)
-- Tuition Fee
-- Total Records: 10 programs
+#### **transactions.csv**
+Contains transaction records:
+- Transaction ID (Primary Key)
+- Account ID (Foreign Key → accounts)
+- Transaction Type, Amount
+- Transaction Date
+- Description, Status
+- Total Records: 50 transactions
 
-#### **admissions.csv**
-Contains admission records linking students to programs:
-- Admission ID (Primary Key)
-- Student ID (Foreign Key → students)
-- Program ID (Foreign Key → programs)
-- Admission Date and Year
-- Entrance Score (0-100)
-- Status (Active, Graduated, Deferred, Withdrawn)
-- Total Records: 20 admissions
+#### **loans.csv**
+Contains loan portfolio information:
+- Loan ID (Primary Key)
+- Account ID (Foreign Key → accounts)
+- Loan Type, Amount
+- Interest Rate, Term
+- Monthly Payment, Status
+- Total Records: 15 loans
 
-#### **grades.csv**
-Contains student course performance:
-- Grade ID (Primary Key)
-- Student ID (Foreign Key → students)
-- Course Name
-- Semester, Academic Year
-- Letter Grade (A, A-, B+, etc.)
-- Credits
-- Total Records: 30 grade entries
+#### **cards.csv**
+Contains card distribution data:
+- Card ID (Primary Key)
+- Account ID (Foreign Key → accounts)
+- Card Type (Debit/Credit)
+- Card Number, Expiry Date
+- Credit Limit (for credit cards)
+- Status
+- Total Records: 25 cards
 
 ### 2.2 Data Characteristics
 
-- **Time Period**: 2021-2023 academic years
-- **Geographic Coverage**: Various regions in Tanzania
-- **Academic Scope**: Multiple departments (Computing, Engineering, Business)
+- **Time Period**: 2021-2023 fiscal years
+- **Geographic Coverage**: Various branches in Tanzania
+- **Financial Scope**: Multiple account types and services
 - **Data Quality**: Clean, validated, with referential integrity
 
 ---
