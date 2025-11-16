@@ -8,13 +8,13 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * Database Connection Manager for Student Data Analysis System.
+ * Database Connection Manager for Bank Data Analysis System.
  * Handles database connectivity using JDBC with MySQL/MariaDB.
  * 
  * This class implements the Singleton pattern to ensure only one
  * connection manager instance exists throughout the application.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class DBConnection {
@@ -58,7 +58,7 @@ public class DBConnection {
             if (input == null) {
                 System.err.println("Unable to find config.properties");
                 // Set default values
-                this.url = "jdbc:mysql://localhost:3306/student_data_analysis?useSSL=false&serverTimezone=UTC";
+                this.url = "jdbc:mysql://localhost:3306/bank_data_analysis?useSSL=false&serverTimezone=UTC";
                 this.user = "root";
                 this.password = "";
                 return;

@@ -1,57 +1,49 @@
 ===================================================================================
                     ENTITY-RELATIONSHIP DIAGRAM (ERD)
-                    Student Data Analysis System
+                    Bank Data Analysis System
 ===================================================================================
 
 ENTITIES AND RELATIONSHIPS:
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                                                                             │
-│  ┌──────────────┐                                        ┌──────────────┐  │
-│  │   STUDENTS   │                                        │   PROGRAMS   │  │
-│  ├──────────────┤                                        ├──────────────┤  │
-│  │ PK student_id│                                        │ PK program_id│  │
-│  │    first_name│                                        │  program_name│  │
-│  │    last_name │                                        │   department │  │
-│  │    email     │                                        │duration_years│  │
-│  │    phone     │                                        │  tuition_fee │  │
-│  │    gender    │                                        │  created_at  │  │
-│  │date_of_birth │                                        │  updated_at  │  │
-│  │    address   │                                        └──────────────┘  │
-│  │  created_at  │                            │                             │
-│  │  updated_at  │                            │                             │
-│  └──────────────┘                            │                             │
-│         │                                    │                             │
-│         │ 1                                  │ 1                           │
-│         │                                    │                             │
-│         │                                    │                             │
-│         │           ┌──────────────┐         │                             │
-│         └──────────►│  ADMISSIONS  │◄────────┘                             │
-│                  N  ├──────────────┤  N                                    │
-│                     │PK admission_id│                                      │
-│                     │FK student_id  │                                      │
-│                     │FK program_id  │                                      │
-│                     │admission_date │                                      │
-│                     │admission_year │                                      │
-│                     │entrance_score │                                      │
-│                     │    status     │                                      │
-│                     │  created_at   │                                      │
-│                     │  updated_at   │                                      │
-│                     └───────────────┘                                      │
-│                                                                             │
-│  ┌──────────────┐                                                          │
-│  │    GRADES    │                                                          │
-│  ├──────────────┤                                                          │
-│  │ PK  grade_id │                                                          │
-│  │ FK student_id│◄──────────┐                                              │
-│  │  course_name │           │                                              │
-│  │   semester   │           │ N                                            │
-│  │academic_year │           │                                              │
-│  │    grade     │           │                                              │
-│  │   credits    │        ┌──────────────┐                                 │
-│  │  created_at  │        │   STUDENTS   │                                 │
-│  │  updated_at  │        └──────────────┘                                 │
-│  └──────────────┘                                                          │
+│  ┌──────────────────┐                                                      │
+│  │     ACCOUNTS     │                                                      │
+│  ├──────────────────┤                                                      │
+│  │ PK account_id    │                                                      │
+│  │  customer_name   │                                                      │
+│  │     email        │                                                      │
+│  │     phone        │                                                      │
+│  │  account_type    │                                                      │
+│  │    balance       │                                                      │
+│  │  date_opened     │                                                      │
+│  │    branch        │                                                      │
+│  │    status        │                                                      │
+│  │   created_at     │                                                      │
+│  │   updated_at     │                                                      │
+│  └──────────────────┘                                                      │
+│          │                                                                  │
+│          │ 1                                                                │
+│          │                                                                  │
+│          ├──────────────────────┬──────────────────────┐                   │
+│          │                      │                      │                   │
+│          │ N                    │ N                    │ N                 │
+│          ▼                      ▼                      ▼                   │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐         │
+│  │  TRANSACTIONS    │  │      LOANS       │  │      CARDS       │         │
+│  ├──────────────────┤  ├──────────────────┤  ├──────────────────┤         │
+│  │PK transaction_id │  │ PK  loan_id      │  │ PK  card_id      │         │
+│  │FK account_id     │  │ FK  account_id   │  │ FK  account_id   │         │
+│  │transaction_type  │  │   loan_type      │  │   card_type      │         │
+│  │     amount       │  │    amount        │  │  card_number     │         │
+│  │transaction_date  │  │ interest_rate    │  │  expiry_date     │         │
+│  │  description     │  │duration_months   │  │  credit_limit    │         │
+│  │    status        │  │  start_date      │  │    status        │         │
+│  │  created_at      │  │    status        │  │  created_at      │         │
+│  │  updated_at      │  │monthly_payment   │  │  updated_at      │         │
+│  └──────────────────┘  │  created_at      │  └──────────────────┘         │
+│                        │  updated_at      │                                │
+│                        └──────────────────┘                                │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
@@ -59,82 +51,92 @@ ENTITIES AND RELATIONSHIPS:
                             RELATIONSHIP DETAILS
 ===================================================================================
 
-1. STUDENTS ──< ADMISSIONS >── PROGRAMS
-   - Type: Many-to-Many (resolved through ADMISSIONS)
-   - Cardinality: One student can have multiple admissions
-   - Cardinality: One program can have multiple admissions
-   - Each admission links one student to one program
-
-2. STUDENTS ──< GRADES
+1. ACCOUNTS ──< TRANSACTIONS
    - Type: One-to-Many
-   - Cardinality: One student can have multiple grades
-   - Each grade belongs to exactly one student
+   - Cardinality: One account can have multiple transactions
+   - Each transaction belongs to exactly one account
+
+2. ACCOUNTS ──< LOANS
+   - Type: One-to-Many
+   - Cardinality: One account can have multiple loans
+   - Each loan belongs to exactly one account
+
+3. ACCOUNTS ──< CARDS
+   - Type: One-to-Many
+   - Cardinality: One account can have multiple cards (debit/credit)
+   - Each card belongs to exactly one account
 
 ===================================================================================
                             ENTITY DESCRIPTIONS
 ===================================================================================
 
-STUDENTS
+ACCOUNTS
 --------
-Primary Key: student_id (INT, AUTO_INCREMENT)
-Purpose: Stores student personal and contact information
+Primary Key: account_id (INT, AUTO_INCREMENT)
+Purpose: Stores bank account information and customer details
 Attributes:
-  - student_id: Unique identifier for each student
-  - first_name: Student's first name
-  - last_name: Student's last name
+  - account_id: Unique identifier for each account
+  - customer_name: Full name of the account holder
   - email: Email address (unique)
   - phone: Contact phone number
-  - gender: Gender (M/F)
-  - date_of_birth: Date of birth
-  - address: Residential address/region
+  - account_type: Type of account (Savings, Checking, Business, Fixed Deposit)
+  - balance: Current account balance
+  - date_opened: Date when account was opened
+  - branch: Bank branch where account was opened
+  - status: Account status (Active, Closed, Frozen, Dormant)
   - created_at: Record creation timestamp
   - updated_at: Last update timestamp
 
-PROGRAMS
---------
-Primary Key: program_id (INT, AUTO_INCREMENT)
-Purpose: Stores academic program information
-Attributes:
-  - program_id: Unique identifier for each program
-  - program_name: Name of the academic program
-  - department: Department offering the program
-  - duration_years: Program duration in years
-  - tuition_fee: Annual tuition fee
-  - created_at: Record creation timestamp
-  - updated_at: Last update timestamp
-
-ADMISSIONS
-----------
-Primary Key: admission_id (INT, AUTO_INCREMENT)
-Foreign Keys:
-  - student_id → STUDENTS(student_id)
-  - program_id → PROGRAMS(program_id)
-Purpose: Links students to programs with admission details
-Attributes:
-  - admission_id: Unique identifier for each admission
-  - student_id: Reference to student
-  - program_id: Reference to program
-  - admission_date: Date of admission
-  - admission_year: Academic year of admission
-  - entrance_score: Entrance examination score
-  - status: Current status (Active, Graduated, Deferred, Withdrawn)
-  - created_at: Record creation timestamp
-  - updated_at: Last update timestamp
-
-GRADES
-------
-Primary Key: grade_id (INT, AUTO_INCREMENT)
+TRANSACTIONS
+------------
+Primary Key: transaction_id (INT, AUTO_INCREMENT)
 Foreign Key:
-  - student_id → STUDENTS(student_id)
-Purpose: Stores student course grades and academic performance
+  - account_id → ACCOUNTS(account_id)
+Purpose: Records all financial transactions for accounts
 Attributes:
-  - grade_id: Unique identifier for each grade record
-  - student_id: Reference to student
-  - course_name: Name of the course
-  - semester: Semester number
-  - academic_year: Year of study
-  - grade: Letter grade (A, A-, B+, B, etc.)
-  - credits: Course credit hours
+  - transaction_id: Unique identifier for each transaction
+  - account_id: Reference to account
+  - transaction_type: Type of transaction (Deposit, Withdrawal, Transfer, Payment, Interest)
+  - amount: Transaction amount
+  - transaction_date: Date of transaction
+  - description: Transaction description
+  - status: Transaction status (Pending, Completed, Failed, Reversed)
+  - created_at: Record creation timestamp
+  - updated_at: Last update timestamp
+
+LOANS
+-----
+Primary Key: loan_id (INT, AUTO_INCREMENT)
+Foreign Key:
+  - account_id → ACCOUNTS(account_id)
+Purpose: Stores loan information and repayment details
+Attributes:
+  - loan_id: Unique identifier for each loan
+  - account_id: Reference to account
+  - loan_type: Type of loan (Personal, Home, Auto, Business, Education)
+  - amount: Loan amount
+  - interest_rate: Annual interest rate percentage
+  - duration_months: Loan duration in months
+  - start_date: Loan start date
+  - status: Loan status (Active, Paid, Defaulted, Closed)
+  - monthly_payment: Monthly payment amount
+  - created_at: Record creation timestamp
+  - updated_at: Last update timestamp
+
+CARDS
+-----
+Primary Key: card_id (INT, AUTO_INCREMENT)
+Foreign Key:
+  - account_id → ACCOUNTS(account_id)
+Purpose: Stores debit and credit card information
+Attributes:
+  - card_id: Unique identifier for each card
+  - account_id: Reference to account
+  - card_type: Type of card (Debit, Credit)
+  - card_number: Card number (unique)
+  - expiry_date: Card expiry date
+  - credit_limit: Credit limit (for credit cards)
+  - status: Card status (Active, Blocked, Expired, Cancelled)
   - created_at: Record creation timestamp
   - updated_at: Last update timestamp
 
@@ -169,47 +171,56 @@ Primary Key Constraints:
   - Ensures entity integrity
 
 Foreign Key Constraints:
-  - ADMISSIONS.student_id → STUDENTS.student_id (ON DELETE RESTRICT)
-  - ADMISSIONS.program_id → PROGRAMS.program_id (ON DELETE RESTRICT)
-  - GRADES.student_id → STUDENTS.student_id (ON DELETE RESTRICT)
+  - TRANSACTIONS.account_id → ACCOUNTS.account_id (ON DELETE RESTRICT)
+  - LOANS.account_id → ACCOUNTS.account_id (ON DELETE RESTRICT)
+  - CARDS.account_id → ACCOUNTS.account_id (ON DELETE RESTRICT)
   - Ensures referential integrity
 
 Check Constraints:
-  - gender CHECK (gender IN ('M', 'F'))
-  - duration_years CHECK (duration_years > 0)
-  - entrance_score CHECK (entrance_score >= 0 AND entrance_score <= 100)
-  - status CHECK (status IN ('Active', 'Graduated', 'Deferred', 'Withdrawn'))
-  - semester CHECK (semester > 0)
-  - credits CHECK (credits > 0)
+  - account_type CHECK (account_type IN ('Savings', 'Checking', 'Business', 'Fixed Deposit'))
+  - account status CHECK (status IN ('Active', 'Closed', 'Frozen', 'Dormant'))
+  - transaction_type CHECK (transaction_type IN ('Deposit', 'Withdrawal', 'Transfer', 'Payment', 'Interest'))
+  - transaction status CHECK (status IN ('Pending', 'Completed', 'Failed', 'Reversed'))
+  - loan_type CHECK (loan_type IN ('Personal', 'Home', 'Auto', 'Business', 'Education'))
+  - loan status CHECK (status IN ('Active', 'Paid', 'Defaulted', 'Closed'))
+  - interest_rate CHECK (interest_rate >= 0)
+  - duration_months CHECK (duration_months > 0)
+  - card_type CHECK (card_type IN ('Debit', 'Credit'))
+  - card status CHECK (status IN ('Active', 'Blocked', 'Expired', 'Cancelled'))
 
 Unique Constraints:
-  - STUDENTS.email (unique)
+  - ACCOUNTS.email (unique)
+  - CARDS.card_number (unique)
 
 Indexes:
-  - idx_email on STUDENTS(email)
-  - idx_last_name on STUDENTS(last_name)
-  - idx_department on PROGRAMS(department)
-  - idx_program_name on PROGRAMS(program_name)
-  - idx_admission_year on ADMISSIONS(admission_year)
-  - idx_status on ADMISSIONS(status)
-  - idx_student_id on ADMISSIONS(student_id)
-  - idx_program_id on ADMISSIONS(program_id)
-  - idx_student_id on GRADES(student_id)
-  - idx_academic_year on GRADES(academic_year)
-  - idx_grade on GRADES(grade)
+  - idx_email on ACCOUNTS(email)
+  - idx_account_type on ACCOUNTS(account_type)
+  - idx_branch on ACCOUNTS(branch)
+  - idx_status on ACCOUNTS(status)
+  - idx_account_id on TRANSACTIONS(account_id)
+  - idx_transaction_type on TRANSACTIONS(transaction_type)
+  - idx_transaction_date on TRANSACTIONS(transaction_date)
+  - idx_status on TRANSACTIONS(status)
+  - idx_account_id on LOANS(account_id)
+  - idx_loan_type on LOANS(loan_type)
+  - idx_status on LOANS(status)
+  - idx_account_id on CARDS(account_id)
+  - idx_card_type on CARDS(card_type)
+  - idx_status on CARDS(status)
 
 ===================================================================================
                             VIEWS
 ===================================================================================
 
-student_admission_details:
-  - Combines STUDENTS, ADMISSIONS, and PROGRAMS
-  - Provides comprehensive view of student admissions
+account_transaction_summary:
+  - Combines ACCOUNTS and TRANSACTIONS
+  - Provides comprehensive view of account transactions
+  - Shows total deposits, withdrawals, and transaction counts
   - Used for reporting and analysis
 
-program_statistics:
-  - Aggregates admission data by program
-  - Shows total admissions, average scores, active/graduated counts
+account_statistics:
+  - Aggregates account data by type
+  - Shows total accounts, balances, and status counts per type
   - Used for dashboard and analytics
 
 ===================================================================================

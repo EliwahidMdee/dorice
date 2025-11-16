@@ -202,17 +202,17 @@ Java Application Development (15/15):
 ✅ Error handling
 
 Statistical Analysis (12/12):
-✅ Admissions by program
-✅ Admissions by year
+✅ Account balances by type
+✅ Transactions by type
 ✅ Status distribution
-✅ Department analysis
-✅ Gender distribution
-✅ Top students
-✅ Program trends
-✅ Student performance/GPA
-✅ Course statistics
+✅ Branch analysis
+✅ Card distribution
+✅ Top accounts
+✅ Transaction trends
+✅ Loan portfolio analysis
+✅ Account activity
 ✅ Regional distribution
-✅ Score range analysis
+✅ Balance range analysis
 ✅ Revenue analysis
 
 Documentation & Presentation (7/7):

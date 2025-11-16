@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  * Unit tests for DBConnection class.
  * Tests database connection functionality.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class DBConnectionTest {
@@ -91,7 +91,7 @@ public class DBConnectionTest {
         
         assertNotNull("URL should not be null", url);
         assertTrue("URL should contain jdbc:mysql", url.contains("jdbc:mysql"));
-        assertTrue("URL should contain database name", url.contains("student_data_analysis"));
+        assertTrue("URL should contain database name", url.contains("bank_data_analysis"));
     }
     
     /**

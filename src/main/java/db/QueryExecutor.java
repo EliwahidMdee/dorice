@@ -6,13 +6,13 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * Query Executor for Student Data Analysis System.
+ * Query Executor for Bank Data Analysis System.
  * Executes SQL queries and returns results in various formats.
  * 
  * This class provides methods to execute queries and format results
  * for display in GUI components like JTable, or for data processing.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class QueryExecutor {
