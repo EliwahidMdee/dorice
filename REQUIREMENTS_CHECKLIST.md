@@ -33,7 +33,7 @@ This document maps each requirement from the project PDF to its implementation i
 |---|------------|----------------|--------|
 | 2.1.1 | Read CSV files | util/CSVImporter.java using Apache Commons CSV library | ✅ |
 | 2.1.2 | Validate CSV format | CSVImporter.validateCSV() method | ✅ |
-| 2.1.3 | Upload to database | CSVImporter.importStudents/Programs/Admissions/Grades() | ✅ |
+| 2.1.3 | Upload to database | CSVImporter.importAccounts/Transactions/Loans/Cards() | ✅ |
 | 2.1.4 | Handle errors | Try-catch blocks with user-friendly error messages | ✅ |
 
 **Location:** `src/main/java/util/CSVImporter.java`

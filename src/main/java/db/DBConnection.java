@@ -58,7 +58,7 @@ public class DBConnection {
             if (input == null) {
                 System.err.println("Unable to find config.properties");
                 // Set default values
-                this.url = "jdbc:mysql://localhost:3306/student_data_analysis?useSSL=false&serverTimezone=UTC";
+                this.url = "jdbc:mysql://localhost:3306/bank_data_analysis?useSSL=false&serverTimezone=UTC";
                 this.user = "root";
                 this.password = "";
                 return;

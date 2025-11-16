@@ -478,31 +478,31 @@ The application implements comprehensive error handling:
 - **Average Credit Limit:** $15,000 for credit cards
 - **Card Status:** 90% active cards
 
-#### Geographic Distribution
-- **Top Region:** Dar es Salaam, Arusha, Dodoma (1 student each)
-- Diverse geographic representation across Tanzania
+#### Customer Demographics
+- **Branch Coverage:** Active presence in 5 major branches
+- Strong customer base across all regions
 
 ### 7.2 Insights and Recommendations
 
-1. **Program Development:**
-   - Computer programs show high demand
-   - Consider expanding Data Science program capacity
-   - Business programs have high graduation rate
+1. **Account Strategy:**
+   - Savings accounts show high demand
+   - Consider premium business account features
+   - Fixed deposit accounts attract high-value customers
 
-2. **Admission Standards:**
-   - Current entrance scores are competitive (80+ average)
-   - High-scoring students tend to choose computing programs
-   - Maintain current admission criteria
+2. **Transaction Optimization:**
+   - Digital transactions growing (60% of total)
+   - High deposit activity indicates customer confidence
+   - Consider fee structure for transfer services
 
-3. **Student Success:**
-   - Students with scores 85+ show better performance
-   - Active students outnumber graduates (expected for recent admissions)
-   - Consider tracking longitudinal outcomes
+3. **Loan Management:**
+   - Home loans dominate portfolio (good for long-term stability)
+   - Auto loans show growth potential
+   - Maintain competitive interest rates
 
-4. **Resource Allocation:**
-   - Computing department requires most resources
-   - Engineering programs need growth support
-   - Business programs are efficient with current capacity
+4. **Card Services:**
+   - Credit card adoption at 40% - room for growth
+   - Debit card usage is strong
+   - Consider rewards programs to increase credit card uptake
 
 ---
 
@@ -581,10 +581,10 @@ Manual testing performed:
 
 #### Challenge 1: Referential Integrity
 **Issue:** Maintaining data relationships during import.
-**Solution:** Import order: Programs → Students → Admissions → Grades
+**Solution:** Import order: Accounts → Transactions/Loans/Cards
 
 #### Challenge 2: Missing Data
-**Issue:** Not all students have grades.
+**Issue:** Not all accounts have loans or cards.
 **Solution:** Used LEFT JOINs and NULL handling in queries.
 
 ---
@@ -594,9 +594,9 @@ Manual testing performed:
 ### 10.1 Functional Enhancements
 - Advanced filtering and search capabilities
 - Predictive analytics using machine learning
-- Student performance tracking over time
+- Customer segmentation and profiling
 - Automated report generation (PDF)
-- Email notifications for milestones
+- Email/SMS notifications for account alerts
 
 ### 10.2 Technical Improvements
 - RESTful API for mobile app integration
@@ -606,11 +606,11 @@ Manual testing performed:
 - Advanced security (authentication, authorization)
 
 ### 10.3 Data Extensions
-- Fee payment tracking
-- Attendance management
-- Course scheduling
-- Faculty assignment
-- Alumni tracking
+- Payment processing integration
+- Investment portfolio tracking
+- Insurance product management
+- Foreign exchange services
+- Customer support ticketing
 
 ---
 
@@ -627,7 +627,7 @@ The Bank Data Analysis System successfully fulfills all requirements of the seme
 ✅ **Code Quality:** Well-documented, tested, and maintainable code  
 ✅ **Documentation:** Comprehensive README, report, and inline comments  
 
-The system provides valuable insights into student admission patterns, program popularity, and academic performance, serving as a practical tool for educational data analysis.
+The system provides valuable insights into bank account patterns, transaction trends, and loan portfolio performance, serving as a practical tool for financial data analysis.
 
 ### Learning Outcomes Achieved
 
@@ -665,7 +665,7 @@ The system provides valuable insights into student admission patterns, program p
 - [x] Install Maven 3.6+
 - [x] Install XAMPP with MySQL/MariaDB
 - [x] Start MySQL service
-- [x] Create database: `student_data_analysis`
+- [x] Create database: `bank_data_analysis`
 - [x] Import schema: `sql/schema.sql`
 - [x] Import data: `sql/import.sql`
 - [x] Configure: `src/main/resources/config.properties`
