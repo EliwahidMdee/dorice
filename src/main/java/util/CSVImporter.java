@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CSV Importer Utility for Student Data Analysis System.
+ * CSV Importer Utility for Bank Data Analysis System.
  * Reads CSV files and imports data into the database.
  * 
  * This class handles CSV parsing, data validation, and batch insertion
  * into database tables using JDBC prepared statements.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class CSVImporter {
@@ -33,14 +33,14 @@ public class CSVImporter {
     }
     
     /**
-     * Imports student data from CSV file to database.
+     * Imports account data from CSV file to database.
      * 
      * @param csvFilePath Path to the CSV file
      * @return Number of records imported
      * @throws IOException if file reading fails
      * @throws SQLException if database insertion fails
      */
-    public int importStudents(String csvFilePath) throws IOException, SQLException {
+    public int importAccounts(String csvFilePath) throws IOException, SQLException {
         int count = 0;
         
         try (Reader reader = new FileReader(csvFilePath, StandardCharsets.UTF_8);
@@ -48,91 +48,21 @@ public class CSVImporter {
                      CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
             
             for (CSVRecord record : csvParser) {
-                String query = "INSERT INTO students (student_id, first_name, last_name, email, " +
-                        "phone, gender, date_of_birth, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
-                        "ON DUPLICATE KEY UPDATE first_name=VALUES(first_name), " +
-                        "last_name=VALUES(last_name), email=VALUES(email)";
+                String query = "INSERT INTO accounts (account_id, customer_name, email, " +
+                        "phone, account_type, balance, date_opened, branch, status) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                        "ON DUPLICATE KEY UPDATE customer_name=VALUES(customer_name), " +
+                        "balance=VALUES(balance)";
                 
                 queryExecutor.executeParameterizedUpdate(query,
-                        Integer.parseInt(record.get("student_id")),
-                        record.get("first_name"),
-                        record.get("last_name"),
+                        Integer.parseInt(record.get("account_id")),
+                        record.get("customer_name"),
                         record.get("email"),
                         record.get("phone"),
-                        record.get("gender"),
-                        record.get("date_of_birth"),
-                        record.get("address"));
-                
-                count++;
-            }
-        }
-        
-        return count;
-    }
-    
-    /**
-     * Imports program data from CSV file to database.
-     * 
-     * @param csvFilePath Path to the CSV file
-     * @return Number of records imported
-     * @throws IOException if file reading fails
-     * @throws SQLException if database insertion fails
-     */
-    public int importPrograms(String csvFilePath) throws IOException, SQLException {
-        int count = 0;
-        
-        try (Reader reader = new FileReader(csvFilePath, StandardCharsets.UTF_8);
-             CSVParser csvParser = new CSVParser(reader, 
-                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
-            
-            for (CSVRecord record : csvParser) {
-                String query = "INSERT INTO programs (program_id, program_name, department, " +
-                        "duration_years, tuition_fee) VALUES (?, ?, ?, ?, ?) " +
-                        "ON DUPLICATE KEY UPDATE program_name=VALUES(program_name), " +
-                        "department=VALUES(department)";
-                
-                queryExecutor.executeParameterizedUpdate(query,
-                        Integer.parseInt(record.get("program_id")),
-                        record.get("program_name"),
-                        record.get("department"),
-                        Integer.parseInt(record.get("duration_years")),
-                        Double.parseDouble(record.get("tuition_fee")));
-                
-                count++;
-            }
-        }
-        
-        return count;
-    }
-    
-    /**
-     * Imports admission data from CSV file to database.
-     * 
-     * @param csvFilePath Path to the CSV file
-     * @return Number of records imported
-     * @throws IOException if file reading fails
-     * @throws SQLException if database insertion fails
-     */
-    public int importAdmissions(String csvFilePath) throws IOException, SQLException {
-        int count = 0;
-        
-        try (Reader reader = new FileReader(csvFilePath, StandardCharsets.UTF_8);
-             CSVParser csvParser = new CSVParser(reader, 
-                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
-            
-            for (CSVRecord record : csvParser) {
-                String query = "INSERT INTO admissions (admission_id, student_id, program_id, " +
-                        "admission_date, admission_year, entrance_score, status) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?) " +
-                        "ON DUPLICATE KEY UPDATE status=VALUES(status)";
-                
-                queryExecutor.executeParameterizedUpdate(query,
-                        Integer.parseInt(record.get("admission_id")),
-                        Integer.parseInt(record.get("student_id")),
-                        Integer.parseInt(record.get("program_id")),
-                        record.get("admission_date"),
-                        Integer.parseInt(record.get("admission_year")),
-                        Double.parseDouble(record.get("entrance_score")),
+                        record.get("account_type"),
+                        Double.parseDouble(record.get("balance")),
+                        record.get("date_opened"),
+                        record.get("branch"),
                         record.get("status"));
                 
                 count++;
@@ -143,14 +73,14 @@ public class CSVImporter {
     }
     
     /**
-     * Imports grade data from CSV file to database.
+     * Imports transaction data from CSV file to database.
      * 
      * @param csvFilePath Path to the CSV file
      * @return Number of records imported
      * @throws IOException if file reading fails
      * @throws SQLException if database insertion fails
      */
-    public int importGrades(String csvFilePath) throws IOException, SQLException {
+    public int importTransactions(String csvFilePath) throws IOException, SQLException {
         int count = 0;
         
         try (Reader reader = new FileReader(csvFilePath, StandardCharsets.UTF_8);
@@ -158,19 +88,95 @@ public class CSVImporter {
                      CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
             
             for (CSVRecord record : csvParser) {
-                String query = "INSERT INTO grades (grade_id, student_id, course_name, " +
-                        "semester, academic_year, grade, credits) " +
+                String query = "INSERT INTO transactions (transaction_id, account_id, transaction_type, " +
+                        "amount, transaction_date, description, status) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?) " +
-                        "ON DUPLICATE KEY UPDATE grade=VALUES(grade)";
+                        "ON DUPLICATE KEY UPDATE status=VALUES(status)";
                 
                 queryExecutor.executeParameterizedUpdate(query,
-                        Integer.parseInt(record.get("grade_id")),
-                        Integer.parseInt(record.get("student_id")),
-                        record.get("course_name"),
-                        Integer.parseInt(record.get("semester")),
-                        Integer.parseInt(record.get("academic_year")),
-                        record.get("grade"),
-                        Integer.parseInt(record.get("credits")));
+                        Integer.parseInt(record.get("transaction_id")),
+                        Integer.parseInt(record.get("account_id")),
+                        record.get("transaction_type"),
+                        Double.parseDouble(record.get("amount")),
+                        record.get("transaction_date"),
+                        record.get("description"),
+                        record.get("status"));
+                
+                count++;
+            }
+        }
+        
+        return count;
+    }
+    
+    /**
+     * Imports loan data from CSV file to database.
+     * 
+     * @param csvFilePath Path to the CSV file
+     * @return Number of records imported
+     * @throws IOException if file reading fails
+     * @throws SQLException if database insertion fails
+     */
+    public int importLoans(String csvFilePath) throws IOException, SQLException {
+        int count = 0;
+        
+        try (Reader reader = new FileReader(csvFilePath, StandardCharsets.UTF_8);
+             CSVParser csvParser = new CSVParser(reader, 
+                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
+            
+            for (CSVRecord record : csvParser) {
+                String query = "INSERT INTO loans (loan_id, account_id, loan_type, amount, " +
+                        "interest_rate, duration_months, start_date, status, monthly_payment) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                        "ON DUPLICATE KEY UPDATE status=VALUES(status)";
+                
+                queryExecutor.executeParameterizedUpdate(query,
+                        Integer.parseInt(record.get("loan_id")),
+                        Integer.parseInt(record.get("account_id")),
+                        record.get("loan_type"),
+                        Double.parseDouble(record.get("amount")),
+                        Double.parseDouble(record.get("interest_rate")),
+                        Integer.parseInt(record.get("duration_months")),
+                        record.get("start_date"),
+                        record.get("status"),
+                        Double.parseDouble(record.get("monthly_payment")));
+                
+                count++;
+            }
+        }
+        
+        return count;
+    }
+    
+    /**
+     * Imports card data from CSV file to database.
+     * 
+     * @param csvFilePath Path to the CSV file
+     * @return Number of records imported
+     * @throws IOException if file reading fails
+     * @throws SQLException if database insertion fails
+     */
+    public int importCards(String csvFilePath) throws IOException, SQLException {
+        int count = 0;
+        
+        try (Reader reader = new FileReader(csvFilePath, StandardCharsets.UTF_8);
+             CSVParser csvParser = new CSVParser(reader, 
+                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
+            
+            for (CSVRecord record : csvParser) {
+                String query = "INSERT INTO cards (card_id, account_id, card_type, card_number, " +
+                        "expiry_date, credit_limit, status) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                        "ON DUPLICATE KEY UPDATE status=VALUES(status)";
+                
+                queryExecutor.executeParameterizedUpdate(query,
+                        Integer.parseInt(record.get("card_id")),
+                        Integer.parseInt(record.get("account_id")),
+                        record.get("card_type"),
+                        record.get("card_number"),
+                        record.get("expiry_date"),
+                        Double.parseDouble(record.get("credit_limit")),
+                        record.get("status"));
                 
                 count++;
             }
@@ -208,21 +214,21 @@ public class CSVImporter {
             int count = 0;
             
             try {
-                if (fileName.contains("student") && !fileName.contains("admission")) {
-                    count = importStudents(csvFile.getAbsolutePath());
-                    result.append(String.format("Students: %d records imported\n", count));
+                if (fileName.contains("account") && !fileName.contains("transaction")) {
+                    count = importAccounts(csvFile.getAbsolutePath());
+                    result.append(String.format("Accounts: %d records imported\n", count));
                 } 
-                else if (fileName.contains("program")) {
-                    count = importPrograms(csvFile.getAbsolutePath());
-                    result.append(String.format("Programs: %d records imported\n", count));
+                else if (fileName.contains("transaction")) {
+                    count = importTransactions(csvFile.getAbsolutePath());
+                    result.append(String.format("Transactions: %d records imported\n", count));
                 } 
-                else if (fileName.contains("admission")) {
-                    count = importAdmissions(csvFile.getAbsolutePath());
-                    result.append(String.format("Admissions: %d records imported\n", count));
+                else if (fileName.contains("loan")) {
+                    count = importLoans(csvFile.getAbsolutePath());
+                    result.append(String.format("Loans: %d records imported\n", count));
                 } 
-                else if (fileName.contains("grade")) {
-                    count = importGrades(csvFile.getAbsolutePath());
-                    result.append(String.format("Grades: %d records imported\n", count));
+                else if (fileName.contains("card")) {
+                    count = importCards(csvFile.getAbsolutePath());
+                    result.append(String.format("Cards: %d records imported\n", count));
                 } 
                 else {
                     result.append(String.format("Skipped (unknown type): %s\n", fileName));

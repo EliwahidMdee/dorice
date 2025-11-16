@@ -1,209 +1,198 @@
 -- ================================================================
--- Statistical Analysis Queries for Student Data Analysis System
+-- Statistical Analysis Queries for Bank Data Analysis System
 -- These queries support the analysis requirements from the project PDF
 -- ================================================================
 
-USE student_data_analysis;
+USE bank_data_analysis;
 
 -- ================================================================
--- Query 1: Admissions by Program
--- Purpose: Count total admissions per program
+-- Query 1: Account Balances by Type
+-- Purpose: Analyze total and average balances per account type
 -- ================================================================
 SELECT 
-    p.program_name,
-    p.department,
-    COUNT(a.admission_id) AS total_admissions,
-    AVG(a.entrance_score) AS avg_entrance_score,
-    MIN(a.entrance_score) AS min_entrance_score,
-    MAX(a.entrance_score) AS max_entrance_score
-FROM programs p
-LEFT JOIN admissions a ON p.program_id = a.program_id
-GROUP BY p.program_id, p.program_name, p.department
-ORDER BY total_admissions DESC;
+    account_type,
+    COUNT(account_id) AS total_accounts,
+    SUM(balance) AS total_balance,
+    AVG(balance) AS avg_balance,
+    MIN(balance) AS min_balance,
+    MAX(balance) AS max_balance
+FROM accounts
+GROUP BY account_type
+ORDER BY total_balance DESC;
 
 -- ================================================================
--- Query 2: Admissions by Year
--- Purpose: Track admission trends over years
+-- Query 2: Transaction Analysis by Type
+-- Purpose: Track transaction volumes and amounts by type
 -- ================================================================
 SELECT 
-    admission_year,
-    COUNT(admission_id) AS total_admissions,
-    AVG(entrance_score) AS avg_entrance_score,
-    COUNT(CASE WHEN status = 'Active' THEN 1 END) AS active_count,
-    COUNT(CASE WHEN status = 'Graduated' THEN 1 END) AS graduated_count
-FROM admissions
-GROUP BY admission_year
-ORDER BY admission_year;
+    transaction_type,
+    COUNT(transaction_id) AS total_transactions,
+    SUM(amount) AS total_amount,
+    AVG(amount) AS avg_amount,
+    MIN(amount) AS min_amount,
+    MAX(amount) AS max_amount
+FROM transactions
+WHERE status = 'Completed'
+GROUP BY transaction_type
+ORDER BY total_amount DESC;
 
 -- ================================================================
--- Query 3: Student Status Distribution
--- Purpose: Distribution of students by current status
+-- Query 3: Branch-wise Account Distribution
+-- Purpose: Analyze account distribution across branches
+-- ================================================================
+SELECT 
+    branch,
+    COUNT(account_id) AS total_accounts,
+    SUM(balance) AS total_balance,
+    AVG(balance) AS avg_balance,
+    COUNT(CASE WHEN status = 'Active' THEN 1 END) AS active_accounts,
+    COUNT(CASE WHEN status = 'Closed' THEN 1 END) AS closed_accounts
+FROM accounts
+GROUP BY branch
+ORDER BY total_balance DESC;
+
+-- ================================================================
+-- Query 4: Loan Portfolio Analysis
+-- Purpose: Analyze loans by type and status
+-- ================================================================
+SELECT 
+    loan_type,
+    COUNT(loan_id) AS total_loans,
+    SUM(amount) AS total_loan_amount,
+    AVG(amount) AS avg_loan_amount,
+    AVG(interest_rate) AS avg_interest_rate,
+    SUM(monthly_payment) AS total_monthly_payments
+FROM loans
+WHERE status = 'Active'
+GROUP BY loan_type
+ORDER BY total_loan_amount DESC;
+
+-- ================================================================
+-- Query 5: Account Status Distribution
+-- Purpose: Distribution of accounts by status
 -- ================================================================
 SELECT 
     status,
     COUNT(*) AS count,
-    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM admissions), 2) AS percentage
-FROM admissions
+    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM accounts), 2) AS percentage,
+    SUM(balance) AS total_balance
+FROM accounts
 GROUP BY status
 ORDER BY count DESC;
 
 -- ================================================================
--- Query 4: Department-wise Analysis
--- Purpose: Analyze admissions by department
+-- Query 6: Top Accounts by Balance
+-- Purpose: Identify high-value accounts
 -- ================================================================
 SELECT 
-    p.department,
-    COUNT(DISTINCT p.program_id) AS total_programs,
-    COUNT(a.admission_id) AS total_admissions,
-    AVG(a.entrance_score) AS avg_entrance_score,
-    AVG(p.tuition_fee) AS avg_tuition_fee
-FROM programs p
-LEFT JOIN admissions a ON p.program_id = a.program_id
-GROUP BY p.department
-ORDER BY total_admissions DESC;
-
--- ================================================================
--- Query 5: Gender Distribution in Admissions
--- Purpose: Analyze gender balance in admissions
--- ================================================================
-SELECT 
-    s.gender,
-    COUNT(a.admission_id) AS total_admissions,
-    AVG(a.entrance_score) AS avg_entrance_score,
-    COUNT(CASE WHEN a.status = 'Graduated' THEN 1 END) AS graduated_count
-FROM students s
-INNER JOIN admissions a ON s.student_id = a.student_id
-GROUP BY s.gender;
-
--- ================================================================
--- Query 6: Top Performing Students
--- Purpose: Identify students with highest entrance scores
--- ================================================================
-SELECT 
-    CONCAT(s.first_name, ' ', s.last_name) AS student_name,
-    s.email,
-    p.program_name,
-    a.admission_year,
-    a.entrance_score,
-    a.status
-FROM students s
-INNER JOIN admissions a ON s.student_id = a.student_id
-INNER JOIN programs p ON a.program_id = p.program_id
-ORDER BY a.entrance_score DESC
+    account_id,
+    customer_name,
+    email,
+    account_type,
+    balance,
+    branch,
+    status
+FROM accounts
+ORDER BY balance DESC
 LIMIT 10;
 
 -- ================================================================
--- Query 7: Program Popularity Trend
--- Purpose: Track which programs are gaining or losing popularity
+-- Query 7: Transaction Volume Trends
+-- Purpose: Track transaction patterns over time
 -- ================================================================
 SELECT 
-    p.program_name,
-    a.admission_year,
-    COUNT(a.admission_id) AS admissions_count
-FROM programs p
-INNER JOIN admissions a ON p.program_id = a.program_id
-GROUP BY p.program_id, p.program_name, a.admission_year
-ORDER BY p.program_name, a.admission_year;
+    DATE_FORMAT(transaction_date, '%Y-%m') AS month,
+    COUNT(transaction_id) AS total_transactions,
+    SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) AS total_inflow,
+    SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END) AS total_outflow,
+    SUM(amount) AS net_amount
+FROM transactions
+WHERE status = 'Completed'
+GROUP BY month
+ORDER BY month DESC;
 
 -- ================================================================
--- Query 8: Student Performance Analysis
--- Purpose: Calculate GPA and academic performance metrics
+-- Query 8: Card Distribution Analysis
+-- Purpose: Analyze debit and credit card distribution
 -- ================================================================
 SELECT 
-    s.student_id,
-    CONCAT(s.first_name, ' ', s.last_name) AS student_name,
-    COUNT(g.grade_id) AS total_courses,
-    SUM(g.credits) AS total_credits,
-    -- Grade point calculation (simplified)
-    CASE 
-        WHEN AVG(CASE g.grade
-            WHEN 'A' THEN 4.0
-            WHEN 'A-' THEN 3.7
-            WHEN 'B+' THEN 3.3
-            WHEN 'B' THEN 3.0
-            WHEN 'B-' THEN 2.7
-            WHEN 'C+' THEN 2.3
-            WHEN 'C' THEN 2.0
-            ELSE 0
-        END) IS NOT NULL THEN ROUND(AVG(CASE g.grade
-            WHEN 'A' THEN 4.0
-            WHEN 'A-' THEN 3.7
-            WHEN 'B+' THEN 3.3
-            WHEN 'B' THEN 3.0
-            WHEN 'B-' THEN 2.7
-            WHEN 'C+' THEN 2.3
-            WHEN 'C' THEN 2.0
-            ELSE 0
-        END), 2)
-        ELSE 0
-    END AS gpa
-FROM students s
-LEFT JOIN grades g ON s.student_id = g.student_id
-GROUP BY s.student_id, s.first_name, s.last_name
-HAVING total_courses > 0
-ORDER BY gpa DESC;
+    card_type,
+    COUNT(card_id) AS total_cards,
+    COUNT(CASE WHEN status = 'Active' THEN 1 END) AS active_cards,
+    SUM(CASE WHEN card_type = 'Credit' THEN credit_limit ELSE 0 END) AS total_credit_limit,
+    AVG(CASE WHEN card_type = 'Credit' THEN credit_limit ELSE NULL END) AS avg_credit_limit
+FROM cards
+GROUP BY card_type;
 
 -- ================================================================
--- Query 9: Course Enrollment Statistics
--- Purpose: Analyze popular courses and grade distribution
+-- Query 9: Account Activity Analysis
+-- Purpose: Identify most active accounts
 -- ================================================================
 SELECT 
-    course_name,
-    COUNT(*) AS enrollment_count,
-    AVG(credits) AS avg_credits,
-    COUNT(CASE WHEN grade IN ('A', 'A-') THEN 1 END) AS excellent_count,
-    COUNT(CASE WHEN grade LIKE 'B%' THEN 1 END) AS good_count,
-    COUNT(CASE WHEN grade LIKE 'C%' THEN 1 END) AS average_count
-FROM grades
-GROUP BY course_name
-ORDER BY enrollment_count DESC;
+    a.account_id,
+    a.customer_name,
+    a.account_type,
+    a.balance,
+    COUNT(t.transaction_id) AS transaction_count,
+    SUM(CASE WHEN t.amount > 0 THEN t.amount ELSE 0 END) AS total_deposits,
+    SUM(CASE WHEN t.amount < 0 THEN ABS(t.amount) ELSE 0 END) AS total_withdrawals
+FROM accounts a
+LEFT JOIN transactions t ON a.account_id = t.account_id AND t.status = 'Completed'
+GROUP BY a.account_id, a.customer_name, a.account_type, a.balance
+HAVING transaction_count > 0
+ORDER BY transaction_count DESC
+LIMIT 10;
 
 -- ================================================================
--- Query 10: Regional Distribution of Students
--- Purpose: Analyze student geographic distribution
+-- Query 10: Loan Repayment Analysis
+-- Purpose: Calculate total loan obligations
 -- ================================================================
 SELECT 
-    s.address AS region,
-    COUNT(s.student_id) AS student_count,
-    COUNT(DISTINCT a.program_id) AS programs_chosen,
-    AVG(a.entrance_score) AS avg_entrance_score
-FROM students s
-INNER JOIN admissions a ON s.student_id = a.student_id
-GROUP BY s.address
-ORDER BY student_count DESC;
+    a.account_id,
+    a.customer_name,
+    COUNT(l.loan_id) AS total_loans,
+    SUM(l.amount) AS total_borrowed,
+    SUM(l.monthly_payment) AS monthly_obligation,
+    AVG(l.interest_rate) AS avg_interest_rate,
+    a.balance
+FROM accounts a
+INNER JOIN loans l ON a.account_id = l.account_id
+WHERE l.status = 'Active'
+GROUP BY a.account_id, a.customer_name, a.balance
+ORDER BY total_borrowed DESC;
 
 -- ================================================================
--- Query 11: Admission Success Rate by Score Range
--- Purpose: Analyze admission patterns based on entrance scores
+-- Query 11: Balance Range Analysis
+-- Purpose: Categorize accounts by balance ranges
 -- ================================================================
 SELECT 
     CASE 
-        WHEN entrance_score >= 90 THEN '90-100 (Excellent)'
-        WHEN entrance_score >= 80 THEN '80-89 (Very Good)'
-        WHEN entrance_score >= 70 THEN '70-79 (Good)'
-        ELSE 'Below 70'
-    END AS score_range,
-    COUNT(*) AS student_count,
-    AVG(entrance_score) AS avg_score,
-    COUNT(CASE WHEN status = 'Active' THEN 1 END) AS active_students,
-    COUNT(CASE WHEN status = 'Graduated' THEN 1 END) AS graduated_students
-FROM admissions
-GROUP BY score_range
-ORDER BY avg_score DESC;
+        WHEN balance >= 10000000 THEN '10M+ (High Value)'
+        WHEN balance >= 5000000 THEN '5M-10M (Medium-High)'
+        WHEN balance >= 1000000 THEN '1M-5M (Medium)'
+        WHEN balance >= 500000 THEN '500K-1M (Low-Medium)'
+        ELSE 'Below 500K'
+    END AS balance_range,
+    COUNT(*) AS account_count,
+    SUM(balance) AS total_balance,
+    AVG(balance) AS avg_balance
+FROM accounts
+WHERE status = 'Active'
+GROUP BY balance_range
+ORDER BY avg_balance DESC;
 
 -- ================================================================
--- Query 12: Revenue Analysis by Program
--- Purpose: Calculate potential revenue from tuition fees
+-- Query 12: Monthly Revenue from Interest
+-- Purpose: Calculate potential revenue from loans
 -- ================================================================
 SELECT 
-    p.program_name,
-    p.department,
-    p.tuition_fee,
-    COUNT(a.admission_id) AS enrolled_students,
-    (p.tuition_fee * COUNT(a.admission_id)) AS total_revenue,
-    AVG(a.entrance_score) AS avg_student_score
-FROM programs p
-LEFT JOIN admissions a ON p.program_id = a.program_id
-WHERE a.status = 'Active'
-GROUP BY p.program_id, p.program_name, p.department, p.tuition_fee
-ORDER BY total_revenue DESC;
+    loan_type,
+    COUNT(loan_id) AS active_loans,
+    SUM(amount) AS total_principal,
+    AVG(interest_rate) AS avg_rate,
+    SUM(monthly_payment) AS monthly_revenue,
+    SUM(monthly_payment * 12) AS annual_revenue
+FROM loans
+WHERE status = 'Active'
+GROUP BY loan_type
+ORDER BY annual_revenue DESC;

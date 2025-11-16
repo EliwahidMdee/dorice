@@ -10,13 +10,13 @@ import java.sql.SQLException;
 import java.util.Map;
 
 /**
- * Main Application Frame for Student Data Analysis System.
+ * Main Application Frame for Bank Data Analysis System.
  * Provides the primary GUI window with tabbed interface.
  * 
  * This is the main GUI container that holds all panels including
  * dashboard, data tables, and charts.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class MainFrame extends JFrame {
@@ -47,7 +47,7 @@ public class MainFrame extends JFrame {
      * Initializes the main frame properties.
      */
     private void initializeFrame() {
-        setTitle("Student Data Analysis System");
+        setTitle("Bank Data Analysis System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 800);
         setLocationRelativeTo(null); // Center on screen
@@ -151,7 +151,7 @@ public class MainFrame extends JFrame {
                     "Database connection failed!\n\n" +
                     "Please check:\n" +
                     "1. XAMPP MySQL/MariaDB is running\n" +
-                    "2. Database 'student_data_analysis' exists\n" +
+                    "2. Database 'bank_data_analysis' exists\n" +
                     "3. Connection settings in config.properties",
                     "Connection Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -257,17 +257,17 @@ public class MainFrame extends JFrame {
      * Shows about dialog.
      */
     private void showAbout() {
-        String message = "Student Data Analysis System\n" +
+        String message = "Bank Data Analysis System\n" +
                 "Version 1.0.0\n\n" +
                 "A Java Swing + JDBC application for analyzing\n" +
-                "student admission and performance data.\n\n" +
+                "bank accounts, transactions, loans, and cards.\n\n" +
                 "Technologies Used:\n" +
                 "- Java 11+\n" +
                 "- Swing GUI\n" +
                 "- JDBC (MySQL/MariaDB)\n" +
                 "- XChart for visualizations\n" +
                 "- Apache Commons CSV\n\n" +
-                "© 2024 School of Computing & Engineering Sciences";
+                "© 2024 Banking Data Analysis Project";
         
         JOptionPane.showMessageDialog(this,
                 message,

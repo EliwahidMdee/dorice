@@ -5,13 +5,13 @@ import ui.MainFrame;
 import javax.swing.*;
 
 /**
- * Main Application Entry Point for Student Data Analysis System.
+ * Main Application Entry Point for Bank Data Analysis System.
  * Launches the Swing GUI application.
  * 
  * This is the starting point of the application that initializes
  * and displays the main application window.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class MainApp {
@@ -57,11 +57,10 @@ public class MainApp {
      */
     private static void printBanner() {
         System.out.println("============================================================");
-        System.out.println("  STUDENT DATA ANALYSIS SYSTEM");
+        System.out.println("  BANK DATA ANALYSIS SYSTEM");
         System.out.println("  Version 1.0.0");
         System.out.println("============================================================");
-        System.out.println("  School of Computing & Engineering Sciences");
-        System.out.println("  BSc. Computer Networks & Security");
+        System.out.println("  Banking Transaction & Account Management");
         System.out.println("  Object Oriented Programming - Semester Project");
         System.out.println("============================================================");
         System.out.println();

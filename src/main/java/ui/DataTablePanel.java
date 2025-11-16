@@ -54,17 +54,17 @@ public class DataTablePanel extends JPanel {
         label.setFont(new Font("Arial", Font.BOLD, 12));
         
         String[] analyses = {
-            "Admissions by Program",
-            "Admissions by Year",
-            "Status Distribution",
-            "Department Analysis",
-            "Gender Distribution",
-            "Top Students (10)",
-            "Program Trends",
-            "Student Performance",
-            "Course Statistics",
-            "Regional Distribution",
-            "Score Range Analysis",
+            "Account Balances by Type",
+            "Transactions by Type",
+            "Branch Distribution",
+            "Loan Portfolio Analysis",
+            "Account Status Distribution",
+            "Top Accounts (10)",
+            "Transaction Trends",
+            "Card Distribution",
+            "Account Activity",
+            "Loan Repayment Analysis",
+            "Balance Range Analysis",
             "Revenue Analysis"
         };
         
@@ -171,28 +171,28 @@ public class DataTablePanel extends JPanel {
      */
     private DefaultTableModel getDataForAnalysis(String analysisType) throws SQLException {
         switch (analysisType) {
-            case "Admissions by Program":
-                return statService.getAdmissionsByProgram();
-            case "Admissions by Year":
-                return statService.getAdmissionsByYear();
-            case "Status Distribution":
+            case "Account Balances by Type":
+                return statService.getAccountBalancesByType();
+            case "Transactions by Type":
+                return statService.getTransactionsByType();
+            case "Branch Distribution":
+                return statService.getBranchDistribution();
+            case "Loan Portfolio Analysis":
+                return statService.getLoanPortfolioAnalysis();
+            case "Account Status Distribution":
                 return statService.getStatusDistribution();
-            case "Department Analysis":
-                return statService.getDepartmentAnalysis();
-            case "Gender Distribution":
-                return statService.getGenderDistribution();
-            case "Top Students (10)":
-                return statService.getTopStudents(10);
-            case "Program Trends":
-                return statService.getProgramTrends();
-            case "Student Performance":
-                return statService.getStudentPerformance();
-            case "Course Statistics":
-                return statService.getCourseStatistics();
-            case "Regional Distribution":
-                return statService.getRegionalDistribution();
-            case "Score Range Analysis":
-                return statService.getScoreRangeAnalysis();
+            case "Top Accounts (10)":
+                return statService.getTopAccounts(10);
+            case "Transaction Trends":
+                return statService.getTransactionTrends();
+            case "Card Distribution":
+                return statService.getCardDistribution();
+            case "Account Activity":
+                return statService.getAccountActivity();
+            case "Loan Repayment Analysis":
+                return statService.getLoanRepaymentAnalysis();
+            case "Balance Range Analysis":
+                return statService.getBalanceRangeAnalysis();
             case "Revenue Analysis":
                 return statService.getRevenueAnalysis();
             default:

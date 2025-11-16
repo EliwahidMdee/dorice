@@ -1,135 +1,142 @@
 -- ================================================================
--- Database Schema for Student Data Analysis System
--- Database: student_data_analysis
+-- Database Schema for Bank Data Analysis System
+-- Database: bank_data_analysis
 -- Compatible with: MySQL/MariaDB (XAMPP)
 -- ================================================================
 
 -- Drop database if exists (use with caution!)
--- DROP DATABASE IF EXISTS student_data_analysis;
+-- DROP DATABASE IF EXISTS bank_data_analysis;
 
 -- Create database
-CREATE DATABASE IF NOT EXISTS student_data_analysis
+CREATE DATABASE IF NOT EXISTS bank_data_analysis
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-USE student_data_analysis;
+USE bank_data_analysis;
 
 -- ================================================================
--- Table: students
--- Description: Stores student personal information
+-- Table: accounts
+-- Description: Stores bank account information
 -- ================================================================
-CREATE TABLE IF NOT EXISTS students (
-    student_id INT PRIMARY KEY AUTO_INCREMENT,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS accounts (
+    account_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(20),
-    gender CHAR(1) CHECK (gender IN ('M', 'F')),
-    date_of_birth DATE,
-    address VARCHAR(200),
+    account_type VARCHAR(50) NOT NULL CHECK (account_type IN ('Savings', 'Checking', 'Business', 'Fixed Deposit')),
+    balance DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    date_opened DATE NOT NULL,
+    branch VARCHAR(100) NOT NULL,
+    status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Closed', 'Frozen', 'Dormant')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_email (email),
-    INDEX idx_last_name (last_name)
+    INDEX idx_account_type (account_type),
+    INDEX idx_branch (branch),
+    INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ================================================================
--- Table: programs
--- Description: Stores academic program information
+-- Table: transactions
+-- Description: Stores transaction records
 -- ================================================================
-CREATE TABLE IF NOT EXISTS programs (
-    program_id INT PRIMARY KEY AUTO_INCREMENT,
-    program_name VARCHAR(100) NOT NULL,
-    department VARCHAR(100) NOT NULL,
-    duration_years INT NOT NULL CHECK (duration_years > 0),
-    tuition_fee DECIMAL(10, 2) NOT NULL,
+CREATE TABLE IF NOT EXISTS transactions (
+    transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    transaction_type VARCHAR(50) NOT NULL CHECK (transaction_type IN ('Deposit', 'Withdrawal', 'Transfer', 'Payment', 'Interest')),
+    amount DECIMAL(15, 2) NOT NULL,
+    transaction_date DATE NOT NULL,
+    description VARCHAR(255),
+    status VARCHAR(20) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Failed', 'Reversed')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_department (department),
-    INDEX idx_program_name (program_name)
+    FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    INDEX idx_account_id (account_id),
+    INDEX idx_transaction_type (transaction_type),
+    INDEX idx_transaction_date (transaction_date),
+    INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ================================================================
--- Table: admissions
--- Description: Stores student admission records
+-- Table: loans
+-- Description: Stores loan information
 -- ================================================================
-CREATE TABLE IF NOT EXISTS admissions (
-    admission_id INT PRIMARY KEY AUTO_INCREMENT,
-    student_id INT NOT NULL,
-    program_id INT NOT NULL,
-    admission_date DATE NOT NULL,
-    admission_year INT NOT NULL,
-    entrance_score DECIMAL(5, 2) CHECK (entrance_score >= 0 AND entrance_score <= 100),
-    status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Graduated', 'Deferred', 'Withdrawn')),
+CREATE TABLE IF NOT EXISTS loans (
+    loan_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    loan_type VARCHAR(50) NOT NULL CHECK (loan_type IN ('Personal', 'Home', 'Auto', 'Business', 'Education')),
+    amount DECIMAL(15, 2) NOT NULL,
+    interest_rate DECIMAL(5, 2) NOT NULL CHECK (interest_rate >= 0),
+    duration_months INT NOT NULL CHECK (duration_months > 0),
+    start_date DATE NOT NULL,
+    status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Paid', 'Defaulted', 'Closed')),
+    monthly_payment DECIMAL(15, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (program_id) REFERENCES programs(program_id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    INDEX idx_admission_year (admission_year),
-    INDEX idx_status (status),
-    INDEX idx_student_id (student_id),
-    INDEX idx_program_id (program_id)
+    FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    INDEX idx_account_id (account_id),
+    INDEX idx_loan_type (loan_type),
+    INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ================================================================
--- Table: grades
--- Description: Stores student course grades
+-- Table: cards
+-- Description: Stores debit and credit card information
 -- ================================================================
-CREATE TABLE IF NOT EXISTS grades (
-    grade_id INT PRIMARY KEY AUTO_INCREMENT,
-    student_id INT NOT NULL,
-    course_name VARCHAR(100) NOT NULL,
-    semester INT NOT NULL CHECK (semester > 0),
-    academic_year INT NOT NULL,
-    grade VARCHAR(5) NOT NULL,
-    credits INT NOT NULL CHECK (credits > 0),
+CREATE TABLE IF NOT EXISTS cards (
+    card_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    card_type VARCHAR(20) NOT NULL CHECK (card_type IN ('Debit', 'Credit')),
+    card_number VARCHAR(20) NOT NULL UNIQUE,
+    expiry_date DATE NOT NULL,
+    credit_limit DECIMAL(15, 2) DEFAULT 0.00,
+    status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Blocked', 'Expired', 'Cancelled')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE RESTRICT ON UPDATE CASCADE,
-    INDEX idx_student_id (student_id),
-    INDEX idx_academic_year (academic_year),
-    INDEX idx_grade (grade)
+    FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    INDEX idx_account_id (account_id),
+    INDEX idx_card_type (card_type),
+    INDEX idx_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ================================================================
 -- Create views for common queries
 -- ================================================================
 
--- View: student_admission_details
-CREATE OR REPLACE VIEW student_admission_details AS
+-- View: account_transaction_summary
+CREATE OR REPLACE VIEW account_transaction_summary AS
 SELECT 
-    s.student_id,
-    CONCAT(s.first_name, ' ', s.last_name) AS full_name,
-    s.email,
-    s.gender,
-    p.program_name,
-    p.department,
-    a.admission_year,
-    a.entrance_score,
+    a.account_id,
+    a.customer_name,
+    a.email,
+    a.account_type,
+    a.balance,
+    a.branch,
+    COUNT(t.transaction_id) AS total_transactions,
+    SUM(CASE WHEN t.transaction_type = 'Deposit' THEN t.amount ELSE 0 END) AS total_deposits,
+    SUM(CASE WHEN t.transaction_type = 'Withdrawal' THEN t.amount ELSE 0 END) AS total_withdrawals,
     a.status
-FROM students s
-INNER JOIN admissions a ON s.student_id = a.student_id
-INNER JOIN programs p ON a.program_id = p.program_id;
+FROM accounts a
+LEFT JOIN transactions t ON a.account_id = t.account_id
+GROUP BY a.account_id, a.customer_name, a.email, a.account_type, a.balance, a.branch, a.status;
 
--- View: program_statistics
-CREATE OR REPLACE VIEW program_statistics AS
+-- View: account_statistics
+CREATE OR REPLACE VIEW account_statistics AS
 SELECT 
-    p.program_id,
-    p.program_name,
-    p.department,
-    COUNT(a.admission_id) AS total_admissions,
-    AVG(a.entrance_score) AS avg_entrance_score,
-    COUNT(CASE WHEN a.status = 'Active' THEN 1 END) AS active_students,
-    COUNT(CASE WHEN a.status = 'Graduated' THEN 1 END) AS graduated_students
-FROM programs p
-LEFT JOIN admissions a ON p.program_id = a.program_id
-GROUP BY p.program_id, p.program_name, p.department;
+    account_type,
+    COUNT(account_id) AS total_accounts,
+    SUM(balance) AS total_balance,
+    AVG(balance) AS avg_balance,
+    COUNT(CASE WHEN status = 'Active' THEN 1 END) AS active_accounts,
+    COUNT(CASE WHEN status = 'Closed' THEN 1 END) AS closed_accounts
+FROM accounts
+GROUP BY account_type;
 
 -- ================================================================
 -- Insert sample verification data
 -- ================================================================
 -- This ensures the schema is working correctly
--- DELETE FROM grades;
--- DELETE FROM admissions;
--- DELETE FROM students;
--- DELETE FROM programs;
+-- DELETE FROM cards;
+-- DELETE FROM loans;
+-- DELETE FROM transactions;
+-- DELETE FROM accounts;
