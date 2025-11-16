@@ -1,6 +1,6 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
-║             STUDENT DATA ANALYSIS SYSTEM - PROJECT SUMMARY                   ║
+║             BANK DATA ANALYSIS SYSTEM - PROJECT SUMMARY                      ║
 ║                                                                              ║
 ║             Course: Object Oriented Programming                              ║
 ║             Program: BSc. Computer Networks & Security                       ║
@@ -29,10 +29,10 @@
    - Foreign key constraints & indexes implemented
 
 3. ✅ Sample CSV Data Files
-   - students.csv - 20 student records
-   - programs.csv - 10 academic programs
-   - admissions.csv - 20 admission records  
-   - grades.csv - 30 grade records
+   - accounts.csv - 20 bank account records
+   - transactions.csv - 50 transaction records
+   - loans.csv - 15 loan records  
+   - cards.csv - 25 card records
 
 4. ✅ Java Application (12 Classes)
    Database Layer:
@@ -92,27 +92,27 @@ Data Import:
 ✓ Duplicate detection (ON DUPLICATE KEY UPDATE)
 
 Statistical Analysis (12 Types):
-✓ Admissions by Program
-✓ Admissions by Year (Trends)
-✓ Status Distribution (Active/Graduated)
-✓ Department-wise Analysis
-✓ Gender Distribution
-✓ Top Performing Students
-✓ Program Popularity Trends
-✓ Student Performance (GPA Calculation)
-✓ Course Enrollment Statistics
-✓ Regional Student Distribution
-✓ Score Range Analysis
-✓ Revenue Analysis by Program
+✓ Account Balances by Type
+✓ Transactions by Type
+✓ Branch Distribution
+✓ Loan Portfolio Analysis
+✓ Account Status Distribution
+✓ Top Accounts by Balance
+✓ Transaction Trends Over Time
+✓ Card Distribution Analysis
+✓ Account Activity Patterns
+✓ Loan Repayment Analysis
+✓ Balance Range Analysis
+✓ Revenue Analysis from Loans
 
 Data Visualization (7 Charts):
-✓ Admissions by Program (Bar Chart)
-✓ Admissions by Year (Line Chart)
-✓ Status Distribution (Pie Chart)
-✓ Department Analysis (Bar Chart)
-✓ Gender Distribution (Pie Chart)
-✓ Score Range Analysis (Bar Chart)
-✓ Program Trends (Line Chart)
+✓ Account Balances by Type (Bar Chart)
+✓ Transaction Trends (Line Chart)
+✓ Account Status Distribution (Pie Chart)
+✓ Branch Distribution (Bar Chart)
+✓ Transaction Types (Pie Chart)
+✓ Balance Range Analysis (Bar Chart)
+✓ Loan Portfolio (Bar Chart)
 ✓ PNG export for all charts
 
 User Interface:
@@ -239,7 +239,7 @@ Quick Start:
 1. Install Java 11+ and Maven 3.6+
 2. Install and start XAMPP MySQL service
 3. Import database: mysql -u root -p < sql/schema.sql
-4. Import data: mysql -u root -p student_data_analysis < sql/import.sql
+4. Import data: mysql -u root -p bank_data_analysis < sql/import.sql
 5. Build project: mvn clean package
 6. Run application: java -jar target/data-analysis-system-1.0.0-with-dependencies.jar
 
