@@ -1,4 +1,4 @@
-# Requirements Checklist - Student Data Analysis System
+# Requirements Checklist - Bank Data Analysis System
 
 This document maps each requirement from the project PDF to its implementation in the codebase.
 
@@ -10,11 +10,11 @@ This document maps each requirement from the project PDF to its implementation i
 
 | # | Requirement | Implementation | Status |
 |---|------------|----------------|--------|
-| 1.1 | Study the dataset (2-4 CSV files) | Created 4 CSV files: students.csv, programs.csv, admissions.csv, grades.csv | ✅ |
+| 1.1 | Study the dataset (2-4 CSV files) | Created 4 CSV files: accounts.csv, transactions.csv, loans.csv, cards.csv | ✅ |
 | 1.2 | Design an ER diagram | Created docs/erd.txt with comprehensive ERD | ✅ |
 | 1.3 | Create relational tables with correct data types | sql/schema.sql with proper types (INT, VARCHAR, DECIMAL, DATE, TIMESTAMP) | ✅ |
 | 1.4 | Implement primary keys | All tables have AUTO_INCREMENT primary keys | ✅ |
-| 1.5 | Implement foreign keys | admissions and grades tables have FK constraints with ON DELETE RESTRICT | ✅ |
+| 1.5 | Implement foreign keys | transactions, loans, and cards tables have FK constraints with ON DELETE RESTRICT | ✅ |
 | 1.6 | Import CSV data into database | sql/import.sql with INSERT statements; Java CSVImporter.java for programmatic import | ✅ |
 
 **Location:**
@@ -66,17 +66,17 @@ This document maps each requirement from the project PDF to its implementation i
 
 | # | Requirement | Implementation | Status |
 |---|------------|----------------|--------|
-| 2.4.1 | Admissions by program | StatService.getAdmissionsByProgram() | ✅ |
-| 2.4.2 | Admissions by year | StatService.getAdmissionsByYear() | ✅ |
+| 2.4.1 | Account balances by type | StatService.getAccountBalancesByType() | ✅ |
+| 2.4.2 | Transactions by type | StatService.getTransactionsByType() | ✅ |
 | 2.4.3 | Status distribution | StatService.getStatusDistribution() | ✅ |
-| 2.4.4 | Department analysis | StatService.getDepartmentAnalysis() | ✅ |
-| 2.4.5 | Gender distribution | StatService.getGenderDistribution() | ✅ |
-| 2.4.6 | Top students | StatService.getTopStudents() | ✅ |
-| 2.4.7 | Program trends | StatService.getProgramTrends() | ✅ |
-| 2.4.8 | Student performance/GPA | StatService.getStudentPerformance() with GPA calculation | ✅ |
-| 2.4.9 | Course statistics | StatService.getCourseStatistics() | ✅ |
-| 2.4.10 | Regional distribution | StatService.getRegionalDistribution() | ✅ |
-| 2.4.11 | Score range analysis | StatService.getScoreRangeAnalysis() | ✅ |
+| 2.4.4 | Branch analysis | StatService.getBranchDistribution() | ✅ |
+| 2.4.5 | Loan portfolio analysis | StatService.getLoanPortfolioAnalysis() | ✅ |
+| 2.4.6 | Top accounts | StatService.getTopAccounts() | ✅ |
+| 2.4.7 | Transaction trends | StatService.getTransactionTrends() | ✅ |
+| 2.4.8 | Card distribution | StatService.getCardDistribution() | ✅ |
+| 2.4.9 | Account activity | StatService.getAccountActivity() | ✅ |
+| 2.4.10 | Loan repayment analysis | StatService.getLoanRepaymentAnalysis() | ✅ |
+| 2.4.11 | Balance range analysis | StatService.getBalanceRangeAnalysis() | ✅ |
 | 2.4.12 | Revenue analysis | StatService.getRevenueAnalysis() | ✅ |
 
 **Location:** `src/main/java/analysis/StatService.java`
