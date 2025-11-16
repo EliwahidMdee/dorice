@@ -1,0 +1,215 @@
+===================================================================================
+                    ENTITY-RELATIONSHIP DIAGRAM (ERD)
+                    Student Data Analysis System
+===================================================================================
+
+ENTITIES AND RELATIONSHIPS:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  ┌──────────────┐                                        ┌──────────────┐  │
+│  │   STUDENTS   │                                        │   PROGRAMS   │  │
+│  ├──────────────┤                                        ├──────────────┤  │
+│  │ PK student_id│                                        │ PK program_id│  │
+│  │    first_name│                                        │  program_name│  │
+│  │    last_name │                                        │   department │  │
+│  │    email     │                                        │duration_years│  │
+│  │    phone     │                                        │  tuition_fee │  │
+│  │    gender    │                                        │  created_at  │  │
+│  │date_of_birth │                                        │  updated_at  │  │
+│  │    address   │                                        └──────────────┘  │
+│  │  created_at  │                            │                             │
+│  │  updated_at  │                            │                             │
+│  └──────────────┘                            │                             │
+│         │                                    │                             │
+│         │ 1                                  │ 1                           │
+│         │                                    │                             │
+│         │                                    │                             │
+│         │           ┌──────────────┐         │                             │
+│         └──────────►│  ADMISSIONS  │◄────────┘                             │
+│                  N  ├──────────────┤  N                                    │
+│                     │PK admission_id│                                      │
+│                     │FK student_id  │                                      │
+│                     │FK program_id  │                                      │
+│                     │admission_date │                                      │
+│                     │admission_year │                                      │
+│                     │entrance_score │                                      │
+│                     │    status     │                                      │
+│                     │  created_at   │                                      │
+│                     │  updated_at   │                                      │
+│                     └───────────────┘                                      │
+│                                                                             │
+│  ┌──────────────┐                                                          │
+│  │    GRADES    │                                                          │
+│  ├──────────────┤                                                          │
+│  │ PK  grade_id │                                                          │
+│  │ FK student_id│◄──────────┐                                              │
+│  │  course_name │           │                                              │
+│  │   semester   │           │ N                                            │
+│  │academic_year │           │                                              │
+│  │    grade     │           │                                              │
+│  │   credits    │        ┌──────────────┐                                 │
+│  │  created_at  │        │   STUDENTS   │                                 │
+│  │  updated_at  │        └──────────────┘                                 │
+│  └──────────────┘                                                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+===================================================================================
+                            RELATIONSHIP DETAILS
+===================================================================================
+
+1. STUDENTS ──< ADMISSIONS >── PROGRAMS
+   - Type: Many-to-Many (resolved through ADMISSIONS)
+   - Cardinality: One student can have multiple admissions
+   - Cardinality: One program can have multiple admissions
+   - Each admission links one student to one program
+
+2. STUDENTS ──< GRADES
+   - Type: One-to-Many
+   - Cardinality: One student can have multiple grades
+   - Each grade belongs to exactly one student
+
+===================================================================================
+                            ENTITY DESCRIPTIONS
+===================================================================================
+
+STUDENTS
+--------
+Primary Key: student_id (INT, AUTO_INCREMENT)
+Purpose: Stores student personal and contact information
+Attributes:
+  - student_id: Unique identifier for each student
+  - first_name: Student's first name
+  - last_name: Student's last name
+  - email: Email address (unique)
+  - phone: Contact phone number
+  - gender: Gender (M/F)
+  - date_of_birth: Date of birth
+  - address: Residential address/region
+  - created_at: Record creation timestamp
+  - updated_at: Last update timestamp
+
+PROGRAMS
+--------
+Primary Key: program_id (INT, AUTO_INCREMENT)
+Purpose: Stores academic program information
+Attributes:
+  - program_id: Unique identifier for each program
+  - program_name: Name of the academic program
+  - department: Department offering the program
+  - duration_years: Program duration in years
+  - tuition_fee: Annual tuition fee
+  - created_at: Record creation timestamp
+  - updated_at: Last update timestamp
+
+ADMISSIONS
+----------
+Primary Key: admission_id (INT, AUTO_INCREMENT)
+Foreign Keys:
+  - student_id → STUDENTS(student_id)
+  - program_id → PROGRAMS(program_id)
+Purpose: Links students to programs with admission details
+Attributes:
+  - admission_id: Unique identifier for each admission
+  - student_id: Reference to student
+  - program_id: Reference to program
+  - admission_date: Date of admission
+  - admission_year: Academic year of admission
+  - entrance_score: Entrance examination score
+  - status: Current status (Active, Graduated, Deferred, Withdrawn)
+  - created_at: Record creation timestamp
+  - updated_at: Last update timestamp
+
+GRADES
+------
+Primary Key: grade_id (INT, AUTO_INCREMENT)
+Foreign Key:
+  - student_id → STUDENTS(student_id)
+Purpose: Stores student course grades and academic performance
+Attributes:
+  - grade_id: Unique identifier for each grade record
+  - student_id: Reference to student
+  - course_name: Name of the course
+  - semester: Semester number
+  - academic_year: Year of study
+  - grade: Letter grade (A, A-, B+, B, etc.)
+  - credits: Course credit hours
+  - created_at: Record creation timestamp
+  - updated_at: Last update timestamp
+
+===================================================================================
+                            NORMALIZATION
+===================================================================================
+
+The database schema follows Third Normal Form (3NF):
+
+1st Normal Form (1NF):
+  ✓ All attributes contain atomic values
+  ✓ Each column contains values of a single type
+  ✓ Each column has a unique name
+  ✓ No repeating groups
+
+2nd Normal Form (2NF):
+  ✓ Meets 1NF requirements
+  ✓ All non-key attributes are fully functionally dependent on the primary key
+  ✓ No partial dependencies exist
+
+3rd Normal Form (3NF):
+  ✓ Meets 2NF requirements
+  ✓ No transitive dependencies
+  ✓ All attributes depend only on the primary key
+
+===================================================================================
+                            CONSTRAINTS & INTEGRITY
+===================================================================================
+
+Primary Key Constraints:
+  - Each table has a unique, auto-incrementing primary key
+  - Ensures entity integrity
+
+Foreign Key Constraints:
+  - ADMISSIONS.student_id → STUDENTS.student_id (ON DELETE RESTRICT)
+  - ADMISSIONS.program_id → PROGRAMS.program_id (ON DELETE RESTRICT)
+  - GRADES.student_id → STUDENTS.student_id (ON DELETE RESTRICT)
+  - Ensures referential integrity
+
+Check Constraints:
+  - gender CHECK (gender IN ('M', 'F'))
+  - duration_years CHECK (duration_years > 0)
+  - entrance_score CHECK (entrance_score >= 0 AND entrance_score <= 100)
+  - status CHECK (status IN ('Active', 'Graduated', 'Deferred', 'Withdrawn'))
+  - semester CHECK (semester > 0)
+  - credits CHECK (credits > 0)
+
+Unique Constraints:
+  - STUDENTS.email (unique)
+
+Indexes:
+  - idx_email on STUDENTS(email)
+  - idx_last_name on STUDENTS(last_name)
+  - idx_department on PROGRAMS(department)
+  - idx_program_name on PROGRAMS(program_name)
+  - idx_admission_year on ADMISSIONS(admission_year)
+  - idx_status on ADMISSIONS(status)
+  - idx_student_id on ADMISSIONS(student_id)
+  - idx_program_id on ADMISSIONS(program_id)
+  - idx_student_id on GRADES(student_id)
+  - idx_academic_year on GRADES(academic_year)
+  - idx_grade on GRADES(grade)
+
+===================================================================================
+                            VIEWS
+===================================================================================
+
+student_admission_details:
+  - Combines STUDENTS, ADMISSIONS, and PROGRAMS
+  - Provides comprehensive view of student admissions
+  - Used for reporting and analysis
+
+program_statistics:
+  - Aggregates admission data by program
+  - Shows total admissions, average scores, active/graduated counts
+  - Used for dashboard and analytics
+
+===================================================================================

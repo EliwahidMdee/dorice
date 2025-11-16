@@ -1,0 +1,21 @@
+account_id,customer_name,email,phone,account_type,balance,date_opened,branch,status
+1,John Doe,john.doe@email.com,+255712345001,Savings,5500000.00,2021-03-15,Dar es Salaam,Active
+2,Jane Smith,jane.smith@email.com,+255712345002,Checking,3200000.00,2021-07-22,Arusha,Active
+3,Ahmed Hassan,ahmed.hassan@email.com,+255712345003,Savings,8900000.00,2021-01-10,Dodoma,Active
+4,Fatuma Ali,fatuma.ali@email.com,+255712345004,Business,15000000.00,2021-11-30,Mwanza,Active
+5,David Johnson,david.j@email.com,+255712345005,Checking,2100000.00,2022-05-18,Mbeya,Active
+6,Sarah Williams,sarah.w@email.com,+255712345006,Savings,6700000.00,2022-09-25,Tanga,Active
+7,Mohamed Ibrahim,mohamed.i@email.com,+255712345007,Business,22000000.00,2022-02-14,Zanzibar,Active
+8,Grace Mwangi,grace.m@email.com,+255712345008,Checking,1800000.00,2022-12-08,Morogoro,Active
+9,Peter Kamau,peter.k@email.com,+255712345009,Savings,9500000.00,2023-04-20,Kilimanjaro,Active
+10,Amina Said,amina.s@email.com,+255712345010,Fixed Deposit,45000000.00,2023-08-17,Pwani,Active
+11,James Brown,james.b@email.com,+255712345011,Checking,2800000.00,2021-06-12,Singida,Active
+12,Mary Kimani,mary.k@email.com,+255712345012,Savings,7200000.00,2022-10-05,Iringa,Active
+13,Hassan Omar,hassan.o@email.com,+255712345013,Business,18500000.00,2021-01-28,Kigoma,Active
+14,Elizabeth Njeri,elizabeth.n@email.com,+255712345014,Checking,1500000.00,2021-11-19,Rukwa,Closed
+15,Ibrahim Juma,ibrahim.j@email.com,+255712345015,Savings,5800000.00,2022-03-22,Mara,Active
+16,Lucy Wambui,lucy.w@email.com,+255712345016,Fixed Deposit,35000000.00,2023-07-09,Kagera,Active
+17,Rashid Salim,rashid.s@email.com,+255712345017,Business,12000000.00,2021-09-14,Lindi,Active
+18,Catherine Nyambura,catherine.n@email.com,+255712345018,Checking,3500000.00,2023-05-30,Mtwara,Active
+19,Ali Bakari,ali.b@email.com,+255712345019,Savings,8200000.00,2022-12-03,Ruvuma,Active
+20,Rose Muthoni,rose.m@email.com,+255712345020,Checking,2400000.00,2021-08-26,Shinyanga,Closed

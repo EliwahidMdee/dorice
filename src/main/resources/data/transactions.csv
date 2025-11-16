@@ -1,0 +1,21 @@
+transaction_id,account_id,transaction_type,amount,transaction_date,description,status
+1,1,Deposit,500000.00,2023-01-15,Salary Deposit,Completed
+2,1,Withdrawal,200000.00,2023-01-20,ATM Withdrawal,Completed
+3,2,Deposit,800000.00,2023-01-18,Business Revenue,Completed
+4,2,Transfer,-300000.00,2023-01-25,Transfer to Account 5,Completed
+5,3,Deposit,1000000.00,2023-02-01,Investment Return,Completed
+6,3,Withdrawal,150000.00,2023-02-10,Cash Withdrawal,Completed
+7,4,Deposit,2500000.00,2023-02-05,Business Income,Completed
+8,4,Payment,-450000.00,2023-02-15,Supplier Payment,Completed
+9,5,Deposit,600000.00,2023-03-01,Salary Deposit,Completed
+10,5,Transfer,300000.00,2023-03-05,Transfer from Account 2,Completed
+11,6,Deposit,750000.00,2023-03-12,Freelance Payment,Completed
+12,6,Withdrawal,100000.00,2023-03-18,ATM Withdrawal,Completed
+13,7,Deposit,5000000.00,2023-04-01,Contract Payment,Completed
+14,7,Payment,-1200000.00,2023-04-10,Tax Payment,Completed
+15,8,Deposit,400000.00,2023-04-15,Salary Deposit,Completed
+16,8,Withdrawal,80000.00,2023-04-22,Cash Withdrawal,Completed
+17,9,Deposit,1500000.00,2023-05-01,Business Revenue,Completed
+18,9,Transfer,-500000.00,2023-05-08,Transfer to Account 12,Completed
+19,10,Deposit,45000000.00,2023-05-15,Fixed Deposit,Completed
+20,10,Interest,2250000.00,2023-08-15,Quarterly Interest,Completed
