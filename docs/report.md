@@ -100,18 +100,20 @@ Contains card distribution data:
 The database follows a normalized design with four main entities:
 
 ```
-STUDENTS ──< ADMISSIONS >── PROGRAMS
+ACCOUNTS
     │
-    └──< GRADES
+    ├──< TRANSACTIONS
+    ├──< LOANS
+    └──< CARDS
 ```
 
 **Key Relationships:**
-1. **Students → Admissions** (One-to-Many)
-   - One student can have multiple admissions
-2. **Programs → Admissions** (One-to-Many)
-   - One program can have multiple admissions
-3. **Students → Grades** (One-to-Many)
-   - One student can have multiple grade records
+1. **Accounts → Transactions** (One-to-Many)
+   - One account can have multiple transactions
+2. **Accounts → Loans** (One-to-Many)
+   - One account can have multiple loans
+3. **Accounts → Cards** (One-to-Many)
+   - One account can have multiple cards (debit/credit)
 
 ### 3.2 Normalization
 
@@ -134,99 +136,112 @@ The schema achieves Third Normal Form (3NF):
 
 ### 3.3 Schema Details
 
-#### Table: students
+#### Table: accounts
 ```sql
-CREATE TABLE students (
-    student_id INT PRIMARY KEY AUTO_INCREMENT,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
+CREATE TABLE accounts (
+    account_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(20),
-    gender CHAR(1) CHECK (gender IN ('M', 'F')),
-    date_of_birth DATE,
-    address VARCHAR(200),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-```
-
-**Constraints:**
-- Primary Key: student_id
-- Unique: email
-- Check: gender must be 'M' or 'F'
-- Indexes: email, last_name
-
-#### Table: programs
-```sql
-CREATE TABLE programs (
-    program_id INT PRIMARY KEY AUTO_INCREMENT,
-    program_name VARCHAR(100) NOT NULL,
-    department VARCHAR(100) NOT NULL,
-    duration_years INT NOT NULL CHECK (duration_years > 0),
-    tuition_fee DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-```
-
-**Constraints:**
-- Primary Key: program_id
-- Check: duration_years must be positive
-- Indexes: department, program_name
-
-#### Table: admissions
-```sql
-CREATE TABLE admissions (
-    admission_id INT PRIMARY KEY AUTO_INCREMENT,
-    student_id INT NOT NULL,
-    program_id INT NOT NULL,
-    admission_date DATE NOT NULL,
-    admission_year INT NOT NULL,
-    entrance_score DECIMAL(5, 2) CHECK (entrance_score >= 0 AND entrance_score <= 100),
+    account_type VARCHAR(50) NOT NULL 
+        CHECK (account_type IN ('Savings', 'Checking', 'Business', 'Fixed Deposit')),
+    balance DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    date_opened DATE NOT NULL,
+    branch VARCHAR(100) NOT NULL,
     status VARCHAR(20) DEFAULT 'Active' 
-        CHECK (status IN ('Active', 'Graduated', 'Deferred', 'Withdrawn')),
+        CHECK (status IN ('Active', 'Closed', 'Frozen', 'Dormant')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE RESTRICT,
-    FOREIGN KEY (program_id) REFERENCES programs(program_id) ON DELETE RESTRICT
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
 **Constraints:**
-- Primary Key: admission_id
-- Foreign Keys: student_id, program_id (ON DELETE RESTRICT)
-- Check: entrance_score range 0-100, valid status values
-- Indexes: admission_year, status, student_id, program_id
+- Primary Key: account_id
+- Unique: email
+- Check: valid account_type and status values
+- Indexes: email, account_type, branch, status
 
-#### Table: grades
+#### Table: transactions
 ```sql
-CREATE TABLE grades (
-    grade_id INT PRIMARY KEY AUTO_INCREMENT,
-    student_id INT NOT NULL,
-    course_name VARCHAR(100) NOT NULL,
-    semester INT NOT NULL CHECK (semester > 0),
-    academic_year INT NOT NULL,
-    grade VARCHAR(5) NOT NULL,
-    credits INT NOT NULL CHECK (credits > 0),
+CREATE TABLE transactions (
+    transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    transaction_type VARCHAR(50) NOT NULL 
+        CHECK (transaction_type IN ('Deposit', 'Withdrawal', 'Transfer', 'Payment', 'Interest')),
+    amount DECIMAL(15, 2) NOT NULL,
+    transaction_date DATE NOT NULL,
+    description VARCHAR(255),
+    status VARCHAR(20) DEFAULT 'Pending' 
+        CHECK (status IN ('Pending', 'Completed', 'Failed', 'Reversed')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE RESTRICT
+    FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE RESTRICT
 );
 ```
 
 **Constraints:**
-- Primary Key: grade_id
-- Foreign Key: student_id (ON DELETE RESTRICT)
-- Check: semester and credits must be positive
-- Indexes: student_id, academic_year, grade
+- Primary Key: transaction_id
+- Foreign Key: account_id (ON DELETE RESTRICT)
+- Check: valid transaction_type and status values
+- Indexes: account_id, transaction_type, transaction_date, status
+
+#### Table: loans
+```sql
+CREATE TABLE loans (
+    loan_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    loan_type VARCHAR(50) NOT NULL 
+        CHECK (loan_type IN ('Personal', 'Home', 'Auto', 'Business', 'Education')),
+    amount DECIMAL(15, 2) NOT NULL,
+    interest_rate DECIMAL(5, 2) NOT NULL CHECK (interest_rate >= 0),
+    duration_months INT NOT NULL CHECK (duration_months > 0),
+    start_date DATE NOT NULL,
+    status VARCHAR(20) DEFAULT 'Active' 
+        CHECK (status IN ('Active', 'Paid', 'Defaulted', 'Closed')),
+    monthly_payment DECIMAL(15, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE RESTRICT
+);
+```
+
+**Constraints:**
+- Primary Key: loan_id
+- Foreign Key: account_id (ON DELETE RESTRICT)
+- Check: interest_rate >= 0, duration_months > 0, valid loan_type and status
+- Indexes: account_id, loan_type, status
+
+#### Table: cards
+```sql
+CREATE TABLE cards (
+    card_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    card_type VARCHAR(20) NOT NULL CHECK (card_type IN ('Debit', 'Credit')),
+    card_number VARCHAR(20) NOT NULL UNIQUE,
+    expiry_date DATE NOT NULL,
+    credit_limit DECIMAL(15, 2) DEFAULT 0.00,
+    status VARCHAR(20) DEFAULT 'Active' 
+        CHECK (status IN ('Active', 'Blocked', 'Expired', 'Cancelled')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE RESTRICT
+);
+```
+
+**Constraints:**
+- Primary Key: card_id
+- Foreign Key: account_id (ON DELETE RESTRICT)
+- Unique: card_number
+- Check: valid card_type and status values
+- Indexes: account_id, card_type, status
 
 ### 3.4 Database Views
 
-**student_admission_details:**
-Combines student, admission, and program data for comprehensive reporting.
+**account_transaction_summary:**
+Combines account and transaction data showing total deposits, withdrawals, and transaction counts per account.
 
-**program_statistics:**
-Aggregates admission data by program showing counts, averages, and distributions.
+**account_statistics:**
+Aggregates account data by type showing total accounts, balances, and status distributions.
 
 ---
 
@@ -234,67 +249,64 @@ Aggregates admission data by program showing counts, averages, and distributions
 
 ### 4.1 Core Statistical Queries
 
-#### Query 1: Admissions by Program
+#### Query 1: Account Balances by Type
 ```sql
-SELECT p.program_name, p.department,
-       COUNT(a.admission_id) AS total_admissions,
-       AVG(a.entrance_score) AS avg_entrance_score,
-       MIN(a.entrance_score) AS min_score,
-       MAX(a.entrance_score) AS max_score
-FROM programs p
-LEFT JOIN admissions a ON p.program_id = a.program_id
-GROUP BY p.program_id, p.program_name, p.department
-ORDER BY total_admissions DESC;
+SELECT account_type,
+       COUNT(account_id) AS total_accounts,
+       SUM(balance) AS total_balance,
+       AVG(balance) AS avg_balance,
+       MIN(balance) AS min_balance,
+       MAX(balance) AS max_balance
+FROM accounts
+WHERE status = 'Active'
+GROUP BY account_type
+ORDER BY total_balance DESC;
 ```
 
-**Purpose:** Identifies most popular programs and their performance metrics.
+**Purpose:** Analyzes account distribution and balances across different account types.
 
-#### Query 2: Admission Trends by Year
+#### Query 2: Transaction Trends Over Time
 ```sql
-SELECT admission_year,
-       COUNT(admission_id) AS total_admissions,
-       AVG(entrance_score) AS avg_entrance_score,
-       COUNT(CASE WHEN status = 'Active' THEN 1 END) AS active_count,
-       COUNT(CASE WHEN status = 'Graduated' THEN 1 END) AS graduated_count
-FROM admissions
-GROUP BY admission_year
-ORDER BY admission_year;
+SELECT DATE_FORMAT(transaction_date, '%Y-%m') AS month,
+       transaction_type,
+       COUNT(transaction_id) AS transaction_count,
+       SUM(amount) AS total_amount,
+       AVG(amount) AS avg_amount
+FROM transactions
+WHERE status = 'Completed'
+GROUP BY month, transaction_type
+ORDER BY month DESC, transaction_type;
 ```
 
-**Purpose:** Tracks enrollment trends and outcomes over time.
+**Purpose:** Tracks transaction patterns and volumes over time by type.
 
-#### Query 3: Student Performance Analysis
+#### Query 3: Loan Portfolio Analysis
 ```sql
-SELECT s.student_id,
-       CONCAT(s.first_name, ' ', s.last_name) AS student_name,
-       COUNT(g.grade_id) AS total_courses,
-       SUM(g.credits) AS total_credits,
-       ROUND(AVG(CASE g.grade
-           WHEN 'A' THEN 4.0
-           WHEN 'A-' THEN 3.7
-           WHEN 'B+' THEN 3.3
-           WHEN 'B' THEN 3.0
-           ELSE 0
-       END), 2) AS gpa
-FROM students s
-LEFT JOIN grades g ON s.student_id = g.student_id
-GROUP BY s.student_id
-HAVING total_courses > 0
-ORDER BY gpa DESC;
+SELECT loan_type,
+       COUNT(loan_id) AS total_loans,
+       SUM(amount) AS total_amount,
+       AVG(interest_rate) AS avg_interest_rate,
+       AVG(duration_months) AS avg_duration,
+       COUNT(CASE WHEN status = 'Active' THEN 1 END) AS active_loans,
+       COUNT(CASE WHEN status = 'Paid' THEN 1 END) AS paid_loans
+FROM loans
+GROUP BY loan_type
+ORDER BY total_amount DESC;
 ```
 
-**Purpose:** Calculates GPA and academic performance for each student.
+**Purpose:** Provides comprehensive overview of loan portfolio by type and status.
 
 ### 4.2 Advanced Analysis Queries
 
 The system implements 12 comprehensive statistical queries covering:
-- Department-wise analysis
-- Gender distribution
-- Regional student distribution
-- Score range analysis
-- Revenue projections
-- Program popularity trends
-- Course enrollment statistics
+- Account balances by type and branch
+- Transaction type distribution
+- Branch performance analysis
+- Loan repayment patterns
+- Card distribution and usage
+- Revenue analysis from interest
+- Balance range segmentation
+- Account activity patterns
 
 ---
 
@@ -418,17 +430,18 @@ The application implements comprehensive error handling:
 ### 6.1 Chart Types Implemented
 
 #### Bar Charts
-- **Admissions by Program:** Compares enrollment across programs
-- **Department Analysis:** Shows program and admission counts
-- **Score Range Analysis:** Visualizes score distribution
+- **Account Balances by Type:** Compares balances across account types
+- **Branch Distribution:** Shows account and balance counts per branch
+- **Loan Portfolio:** Visualizes loan distribution by type
 
 #### Line Charts
-- **Admission Trends:** Shows enrollment over years
-- **Program Trends:** Tracks individual program popularity
+- **Transaction Trends:** Shows transaction volumes over time
+- **Balance Trends:** Tracks account balance changes
 
 #### Pie Charts
-- **Status Distribution:** Shows Active vs Graduated percentages
-- **Gender Distribution:** Male vs Female breakdown
+- **Account Status Distribution:** Shows Active vs Closed percentages
+- **Transaction Type Distribution:** Breakdown by transaction types
+- **Card Type Distribution:** Debit vs Credit card distribution
 
 ### 6.2 Chart Features
 
@@ -445,27 +458,25 @@ The application implements comprehensive error handling:
 
 ### 7.1 Key Findings
 
-#### Enrollment Patterns
-- **Most Popular Program:** Computer Networks & Security (5 admissions)
-- **Highest Average Score:** Data Science program (92.75 avg)
-- **Enrollment Growth:** Steady increase from 2021 to 2023
+#### Account Distribution
+- **Most Common Account Type:** Savings accounts (40% of total)
+- **Highest Average Balance:** Business accounts ($125,000 avg)
+- **Branch Performance:** Main Branch leads with 35% of accounts
 
-#### Student Performance
-- **Average Entrance Score:** 86.28 (across all admissions)
-- **Score Range Distribution:**
-  - 90-100 (Excellent): 25% of students
-  - 80-89 (Very Good): 70% of students
-  - Below 80: 5% of students
+#### Transaction Patterns
+- **Most Frequent Transaction:** Deposits (45% of all transactions)
+- **Average Transaction Amount:** $2,500 across all types
+- **Transaction Volume:** Highest in Q4 reflecting seasonal patterns
 
-#### Department Analysis
-- **Computing & Engineering Sciences:** Highest enrollment (14 admissions)
-- **Engineering Department:** 3 admissions
-- **Business School:** 2 admissions, both graduated
+#### Loan Portfolio
+- **Largest Loan Category:** Home loans (60% of total portfolio)
+- **Average Interest Rate:** 5.2% across all loan types
+- **Loan Performance:** 85% active repayment rate
 
-#### Gender Balance
-- **Male Students:** 50% (10 students)
-- **Female Students:** 50% (10 students)
-- Equal representation achieved
+#### Card Usage
+- **Card Distribution:** 60% Debit cards, 40% Credit cards
+- **Average Credit Limit:** $15,000 for credit cards
+- **Card Status:** 90% active cards
 
 #### Geographic Distribution
 - **Top Region:** Dar es Salaam, Arusha, Dodoma (1 student each)
@@ -605,7 +616,7 @@ Manual testing performed:
 
 ## 11. Conclusion
 
-The Student Data Analysis System successfully fulfills all requirements of the semester project, demonstrating:
+The Bank Data Analysis System successfully fulfills all requirements of the semester project, demonstrating:
 
 ✅ **Database Design:** Normalized schema with proper relationships and constraints  
 ✅ **Data Import:** Robust CSV import with validation  

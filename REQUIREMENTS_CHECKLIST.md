@@ -322,7 +322,7 @@ Based on project requirements, estimated grade breakdown:
 
 **All project requirements have been successfully implemented and verified.**
 
-The Student Data Analysis System is a complete, production-ready application that:
+The Bank Data Analysis System is a complete, production-ready application that:
 - Meets 100% of the requirements specified in the project PDF
 - Demonstrates mastery of database design, Java programming, and GUI development
 - Provides comprehensive documentation for users and developers

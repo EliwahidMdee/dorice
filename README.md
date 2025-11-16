@@ -152,7 +152,7 @@ mysql -u root -p < sql/schema.sql
 ### Step 3: Import Sample Data
 
 **Using phpMyAdmin:**
-1. Select database: `student_data_analysis`
+1. Select database: `bank_data_analysis`
 2. Import file: `sql/import.sql`
 
 **Using Command Line:**
@@ -231,10 +231,10 @@ dorice/
 │   │   └── resources/
 │   │       ├── config.properties          # Configuration file
 │   │       └── data/                      # CSV data files
-│   │           ├── students.csv -> accounts.csv
-│   │           ├── programs.csv -> loans.csv
-│   │           ├── admissions.csv -> transactions.csv
-│   │           └── grades.csv -> cards.csv
+│   │           ├── accounts.csv
+│   │           ├── transactions.csv
+│   │           ├── loans.csv
+│   │           └── cards.csv
 │   └── test/
 │       └── java/
 │           ├── db/

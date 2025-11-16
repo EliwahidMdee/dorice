@@ -8,13 +8,13 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * Database Connection Manager for Student Data Analysis System.
+ * Database Connection Manager for Bank Data Analysis System.
  * Handles database connectivity using JDBC with MySQL/MariaDB.
  * 
  * This class implements the Singleton pattern to ensure only one
  * connection manager instance exists throughout the application.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class DBConnection {

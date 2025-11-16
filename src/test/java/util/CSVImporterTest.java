@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  * Unit tests for CSVImporter class.
  * Tests CSV import functionality.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class CSVImporterTest {
