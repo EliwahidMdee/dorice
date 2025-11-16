@@ -14,13 +14,13 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Chart Panel for Student Data Analysis System.
+ * Chart Panel for Bank Data Analysis System.
  * Displays various charts and graphs using XChart library.
  * 
- * This panel provides visual representations of data including
+ * This panel provides visual representations of banking data including
  * bar charts, pie charts, and line charts.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class ChartPanel extends JPanel {
@@ -58,13 +58,13 @@ public class ChartPanel extends JPanel {
         label.setFont(new Font("Arial", Font.BOLD, 12));
         
         String[] chartTypes = {
-            "Admissions by Program (Bar)",
-            "Admissions by Year (Line)",
-            "Status Distribution (Pie)",
-            "Department Analysis (Bar)",
-            "Gender Distribution (Pie)",
-            "Score Range Analysis (Bar)",
-            "Program Trends (Line)"
+            "Account Balances by Type (Bar)",
+            "Transaction Trends (Line)",
+            "Account Status Distribution (Pie)",
+            "Branch Distribution (Bar)",
+            "Transaction Types (Pie)",
+            "Balance Range Analysis (Bar)",
+            "Loan Portfolio (Bar)"
         };
         
         chartTypeComboBox = new JComboBox<>(chartTypes);
@@ -148,105 +148,95 @@ public class ChartPanel extends JPanel {
             throws SQLException {
         
         switch (chartType) {
-            case "Admissions by Program (Bar)":
-                return createAdmissionsByProgramChart();
-            case "Admissions by Year (Line)":
-                return createAdmissionsByYearChart();
-            case "Status Distribution (Pie)":
+            case "Account Balances by Type (Bar)":
+                return createAccountBalancesByTypeChart();
+            case "Transaction Trends (Line)":
+                return createTransactionTrendsChart();
+            case "Account Status Distribution (Pie)":
                 return createStatusDistributionChart();
-            case "Department Analysis (Bar)":
-                return createDepartmentAnalysisChart();
-            case "Gender Distribution (Pie)":
-                return createGenderDistributionChart();
-            case "Score Range Analysis (Bar)":
-                return createScoreRangeChart();
-            case "Program Trends (Line)":
-                return createProgramTrendsChart();
+            case "Branch Distribution (Bar)":
+                return createBranchDistributionChart();
+            case "Transaction Types (Pie)":
+                return createTransactionTypesPieChart();
+            case "Balance Range Analysis (Bar)":
+                return createBalanceRangeChart();
+            case "Loan Portfolio (Bar)":
+                return createLoanPortfolioChart();
             default:
-                return createAdmissionsByProgramChart();
+                return createAccountBalancesByTypeChart();
         }
     }
     
     /**
-     * Creates bar chart for admissions by program.
+     * Creates bar chart for account balances by type.
      */
-    private XChartPanel<CategoryChart> createAdmissionsByProgramChart() throws SQLException {
-        DefaultTableModel model = statService.getAdmissionsByProgram();
+    private XChartPanel<CategoryChart> createAccountBalancesByTypeChart() throws SQLException {
+        DefaultTableModel model = statService.getAccountBalancesByType();
         
         CategoryChart chart = new CategoryChartBuilder()
                 .width(800).height(600)
-                .title("Admissions by Program")
-                .xAxisTitle("Program")
-                .yAxisTitle("Total Admissions")
+                .title("Account Balances by Type")
+                .xAxisTitle("Account Type")
+                .yAxisTitle("Total Balance")
                 .theme(Styler.ChartTheme.XChart)
                 .build();
         
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
         chart.getStyler().setXAxisLabelRotation(45);
         
-        List<String> programs = new ArrayList<>();
-        List<Number> admissions = new ArrayList<>();
+        List<String> accountTypes = new ArrayList<>();
+        List<Number> balances = new ArrayList<>();
         
         for (int i = 0; i < model.getRowCount(); i++) {
-            String programName = (String) model.getValueAt(i, 0);
-            Number admissionCount = (Number) model.getValueAt(i, 2);
-            
-            // Truncate long program names
-            if (programName.length() > 20) {
-                programName = programName.substring(0, 17) + "...";
-            }
-            
-            programs.add(programName);
-            admissions.add(admissionCount);
+            accountTypes.add((String) model.getValueAt(i, 0));
+            balances.add((Number) model.getValueAt(i, 2));
         }
         
-        chart.addSeries("Admissions", programs, admissions);
+        chart.addSeries("Total Balance", accountTypes, balances);
         
         return new XChartPanel<>(chart);
     }
     
     /**
-     * Creates line chart for admissions by year.
+     * Creates line chart for transaction trends.
      */
-    private XChartPanel<XYChart> createAdmissionsByYearChart() throws SQLException {
-        DefaultTableModel model = statService.getAdmissionsByYear();
+    private XChartPanel<XYChart> createTransactionTrendsChart() throws SQLException {
+        DefaultTableModel model = statService.getTransactionTrends();
         
         XYChart chart = new XYChartBuilder()
                 .width(800).height(600)
-                .title("Admission Trends by Year")
-                .xAxisTitle("Year")
-                .yAxisTitle("Count")
+                .title("Transaction Trends Over Time")
+                .xAxisTitle("Month")
+                .yAxisTitle("Amount")
                 .theme(Styler.ChartTheme.XChart)
                 .build();
         
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNE);
         chart.getStyler().setMarkerSize(8);
+        chart.getStyler().setXAxisLabelRotation(45);
         
-        List<Double> years = new ArrayList<>();
-        List<Double> totalAdmissions = new ArrayList<>();
-        List<Double> activeCount = new ArrayList<>();
+        List<Double> months = new ArrayList<>();
+        List<Double> totalTransactions = new ArrayList<>();
         
         for (int i = 0; i < model.getRowCount(); i++) {
-            years.add(((Number) model.getValueAt(i, 0)).doubleValue());
-            totalAdmissions.add(((Number) model.getValueAt(i, 1)).doubleValue());
-            activeCount.add(((Number) model.getValueAt(i, 3)).doubleValue());
+            months.add((double) i);
+            totalTransactions.add(((Number) model.getValueAt(i, 1)).doubleValue());
         }
         
-        chart.addSeries("Total Admissions", years, totalAdmissions);
-        chart.addSeries("Active Students", years, activeCount);
+        chart.addSeries("Total Transactions", months, totalTransactions);
         
         return new XChartPanel<>(chart);
     }
     
     /**
-     * Creates pie chart for status distribution.
+     * Creates pie chart for account status distribution.
      */
     private XChartPanel<PieChart> createStatusDistributionChart() throws SQLException {
         DefaultTableModel model = statService.getStatusDistribution();
         
         PieChart chart = new PieChartBuilder()
                 .width(800).height(600)
-                .title("Student Status Distribution")
+                .title("Account Status Distribution")
                 .theme(Styler.ChartTheme.XChart)
                 .build();
         
@@ -262,15 +252,15 @@ public class ChartPanel extends JPanel {
     }
     
     /**
-     * Creates bar chart for department analysis.
+     * Creates bar chart for branch distribution.
      */
-    private XChartPanel<CategoryChart> createDepartmentAnalysisChart() throws SQLException {
-        DefaultTableModel model = statService.getDepartmentAnalysis();
+    private XChartPanel<CategoryChart> createBranchDistributionChart() throws SQLException {
+        DefaultTableModel model = statService.getBranchDistribution();
         
         CategoryChart chart = new CategoryChartBuilder()
                 .width(800).height(600)
-                .title("Department Analysis")
-                .xAxisTitle("Department")
+                .title("Branch-wise Account Distribution")
+                .xAxisTitle("Branch")
                 .yAxisTitle("Count")
                 .theme(Styler.ChartTheme.XChart)
                 .build();
@@ -278,65 +268,61 @@ public class ChartPanel extends JPanel {
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
         chart.getStyler().setXAxisLabelRotation(45);
         
-        List<String> departments = new ArrayList<>();
-        List<Number> programs = new ArrayList<>();
-        List<Number> admissions = new ArrayList<>();
+        List<String> branches = new ArrayList<>();
+        List<Number> accountCounts = new ArrayList<>();
+        List<Number> activeAccounts = new ArrayList<>();
         
         for (int i = 0; i < model.getRowCount(); i++) {
-            String dept = (String) model.getValueAt(i, 0);
-            if (dept.length() > 25) {
-                dept = dept.substring(0, 22) + "...";
-            }
-            departments.add(dept);
-            programs.add((Number) model.getValueAt(i, 1));
-            admissions.add((Number) model.getValueAt(i, 2));
+            branches.add((String) model.getValueAt(i, 0));
+            accountCounts.add((Number) model.getValueAt(i, 1));
+            activeAccounts.add((Number) model.getValueAt(i, 4));
         }
         
-        chart.addSeries("Programs", departments, programs);
-        chart.addSeries("Admissions", departments, admissions);
+        chart.addSeries("Total Accounts", branches, accountCounts);
+        chart.addSeries("Active Accounts", branches, activeAccounts);
         
         return new XChartPanel<>(chart);
     }
     
     /**
-     * Creates pie chart for gender distribution.
+     * Creates pie chart for transaction types distribution.
      */
-    private XChartPanel<PieChart> createGenderDistributionChart() throws SQLException {
-        DefaultTableModel model = statService.getGenderDistribution();
+    private XChartPanel<PieChart> createTransactionTypesPieChart() throws SQLException {
+        DefaultTableModel model = statService.getTransactionsByType();
         
         PieChart chart = new PieChartBuilder()
                 .width(800).height(600)
-                .title("Gender Distribution in Admissions")
+                .title("Transaction Types Distribution")
                 .theme(Styler.ChartTheme.XChart)
                 .build();
         
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNE);
         
         for (int i = 0; i < model.getRowCount(); i++) {
-            String gender = (String) model.getValueAt(i, 0);
+            String transType = (String) model.getValueAt(i, 0);
             Number count = (Number) model.getValueAt(i, 1);
-            String label = gender.equals("M") ? "Male" : "Female";
-            chart.addSeries(label, count);
+            chart.addSeries(transType, count);
         }
         
         return new XChartPanel<>(chart);
     }
     
     /**
-     * Creates bar chart for score range analysis.
+     * Creates bar chart for balance range analysis.
      */
-    private XChartPanel<CategoryChart> createScoreRangeChart() throws SQLException {
-        DefaultTableModel model = statService.getScoreRangeAnalysis();
+    private XChartPanel<CategoryChart> createBalanceRangeChart() throws SQLException {
+        DefaultTableModel model = statService.getBalanceRangeAnalysis();
         
         CategoryChart chart = new CategoryChartBuilder()
                 .width(800).height(600)
-                .title("Admissions by Score Range")
-                .xAxisTitle("Score Range")
-                .yAxisTitle("Student Count")
+                .title("Accounts by Balance Range")
+                .xAxisTitle("Balance Range")
+                .yAxisTitle("Account Count")
                 .theme(Styler.ChartTheme.XChart)
                 .build();
         
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+        chart.getStyler().setXAxisLabelRotation(45);
         
         List<String> ranges = new ArrayList<>();
         List<Number> counts = new ArrayList<>();
@@ -346,53 +332,37 @@ public class ChartPanel extends JPanel {
             counts.add((Number) model.getValueAt(i, 1));
         }
         
-        chart.addSeries("Students", ranges, counts);
+        chart.addSeries("Accounts", ranges, counts);
         
         return new XChartPanel<>(chart);
     }
     
     /**
-     * Creates line chart for program trends.
+     * Creates bar chart for loan portfolio analysis.
      */
-    private XChartPanel<XYChart> createProgramTrendsChart() throws SQLException {
-        DefaultTableModel model = statService.getProgramTrends();
+    private XChartPanel<CategoryChart> createLoanPortfolioChart() throws SQLException {
+        DefaultTableModel model = statService.getLoanPortfolioAnalysis();
         
-        XYChart chart = new XYChartBuilder()
+        CategoryChart chart = new CategoryChartBuilder()
                 .width(800).height(600)
-                .title("Program Enrollment Trends")
-                .xAxisTitle("Year")
-                .yAxisTitle("Admissions")
+                .title("Loan Portfolio by Type")
+                .xAxisTitle("Loan Type")
+                .yAxisTitle("Total Amount")
                 .theme(Styler.ChartTheme.XChart)
                 .build();
         
-        chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideE);
-        chart.getStyler().setMarkerSize(6);
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+        chart.getStyler().setXAxisLabelRotation(45);
         
-        // Group data by program
-        Map<String, List<Double>> programYears = new LinkedHashMap<>();
-        Map<String, List<Double>> programCounts = new LinkedHashMap<>();
+        List<String> loanTypes = new ArrayList<>();
+        List<Number> amounts = new ArrayList<>();
         
         for (int i = 0; i < model.getRowCount(); i++) {
-            String program = (String) model.getValueAt(i, 0);
-            Double year = ((Number) model.getValueAt(i, 1)).doubleValue();
-            Double count = ((Number) model.getValueAt(i, 2)).doubleValue();
-            
-            programYears.computeIfAbsent(program, k -> new ArrayList<>()).add(year);
-            programCounts.computeIfAbsent(program, k -> new ArrayList<>()).add(count);
+            loanTypes.add((String) model.getValueAt(i, 0));
+            amounts.add((Number) model.getValueAt(i, 2));
         }
         
-        // Add series for each program (limit to top 5)
-        int seriesCount = 0;
-        for (Map.Entry<String, List<Double>> entry : programYears.entrySet()) {
-            if (seriesCount++ >= 5) break;
-            
-            String programName = entry.getKey();
-            if (programName.length() > 20) {
-                programName = programName.substring(0, 17) + "...";
-            }
-            
-            chart.addSeries(programName, entry.getValue(), programCounts.get(entry.getKey()));
-        }
+        chart.addSeries("Total Loan Amount", loanTypes, amounts);
         
         return new XChartPanel<>(chart);
     }

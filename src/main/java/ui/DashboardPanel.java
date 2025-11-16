@@ -10,13 +10,13 @@ import java.sql.SQLException;
 import java.util.Map;
 
 /**
- * Dashboard Panel for Student Data Analysis System.
+ * Dashboard Panel for Bank Data Analysis System.
  * Displays summary statistics and key metrics in card format.
  * 
  * This panel provides an at-a-glance view of important statistics
  * using visual cards and summary information.
  * 
- * @author Student Data Analysis Team
+ * @author Bank Data Analysis Team
  * @version 1.0
  */
 public class DashboardPanel extends JPanel {
@@ -187,41 +187,48 @@ public class DashboardPanel extends JPanel {
      */
     private void generateInsights(Map<String, Object> stats) {
         StringBuilder insights = new StringBuilder();
-        insights.append("=== DATA ANALYSIS INSIGHTS ===\n\n");
+        insights.append("=== BANK DATA ANALYSIS INSIGHTS ===\n\n");
         
         try {
             // Extract values
-            int totalStudents = getIntValue(stats.get("Total Students"));
-            int totalPrograms = getIntValue(stats.get("Total Programs"));
-            int totalAdmissions = getIntValue(stats.get("Total Admissions"));
-            int activeStudents = getIntValue(stats.get("Active Students"));
-            double avgScore = getDoubleValue(stats.get("Avg Entrance Score"));
+            int totalAccounts = getIntValue(stats.get("Total Accounts"));
+            double totalBalance = getDoubleValue(stats.get("Total Balance"));
+            int totalTransactions = getIntValue(stats.get("Total Transactions"));
+            int activeAccounts = getIntValue(stats.get("Active Accounts"));
+            int activeLoans = getIntValue(stats.get("Active Loans"));
+            int activeCards = getIntValue(stats.get("Active Cards"));
             
             // Generate insights
-            insights.append("📊 System Overview:\n");
-            insights.append(String.format("   • %d students enrolled across %d academic programs\n",
-                    totalStudents, totalPrograms));
-            insights.append(String.format("   • %d total admissions recorded\n", totalAdmissions));
-            insights.append(String.format("   • %d students currently active (%.1f%%)\n",
-                    activeStudents,
-                    totalAdmissions > 0 ? (activeStudents * 100.0 / totalAdmissions) : 0));
+            insights.append("📊 Banking System Overview:\n");
+            insights.append(String.format("   • %d total accounts with total balance of %.2f\n",
+                    totalAccounts, totalBalance));
+            insights.append(String.format("   • %d completed transactions recorded\n", totalTransactions));
+            insights.append(String.format("   • %d accounts currently active (%.1f%%)\n",
+                    activeAccounts,
+                    totalAccounts > 0 ? (activeAccounts * 100.0 / totalAccounts) : 0));
             
-            insights.append("\n📈 Performance Metrics:\n");
-            insights.append(String.format("   • Average entrance score: %.2f\n", avgScore));
+            insights.append("\n📈 Banking Activity Metrics:\n");
+            insights.append(String.format("   • %d active loans currently being serviced\n", activeLoans));
+            insights.append(String.format("   • %d active cards in circulation\n", activeCards));
+            insights.append(String.format("   • Average balance per account: %.2f\n",
+                    activeAccounts > 0 ? (totalBalance / activeAccounts) : 0));
             
-            if (avgScore >= 85) {
-                insights.append("   • Excellent average performance across all admissions\n");
-            } else if (avgScore >= 75) {
-                insights.append("   • Good average performance with room for improvement\n");
+            if (totalBalance > 100000000) {
+                insights.append("   • Excellent overall deposit portfolio\n");
+            } else if (totalBalance > 50000000) {
+                insights.append("   • Good deposit growth with room for expansion\n");
             } else {
-                insights.append("   • Consider enhancing entrance requirements\n");
+                insights.append("   • Consider deposit mobilization campaigns\n");
             }
             
             insights.append("\n💡 Recommendations:\n");
-            if (totalPrograms > 0 && totalAdmissions / totalPrograms < 5) {
-                insights.append("   • Some programs may have low enrollment - review program offerings\n");
+            if (activeLoans > 0 && totalAccounts > 0 && activeLoans * 100.0 / totalAccounts < 20) {
+                insights.append("   • Low loan penetration - consider loan marketing campaigns\n");
             }
-            insights.append("   • Regularly review and update data for accurate analysis\n");
+            if (activeCards > 0 && totalAccounts > 0 && activeCards * 100.0 / totalAccounts < 30) {
+                insights.append("   • Consider promoting card products to customers\n");
+            }
+            insights.append("   • Regularly review and update account data for accurate analysis\n");
             insights.append("   • Use the Charts tab for detailed visual analysis\n");
             insights.append("   • Export data for external reporting if needed\n");
             
